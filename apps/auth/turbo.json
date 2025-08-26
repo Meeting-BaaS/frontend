@@ -1,0 +1,53 @@
+{
+    "$schema": "https://turbo.build/schema.json",
+    "tasks": {
+        "build": {
+            "dependsOn": [
+                "^build"
+            ],
+            "outputs": [
+                ".next/**",
+                "!.next/cache/**"
+            ]
+        },
+        "check-types": {
+            "dependsOn": [
+                "^check-types"
+            ]
+        },
+        "dev": {
+            "persistent": true,
+            "cache": false
+        }
+    },
+    "globalEnv": [
+        "APP_URL",
+        "AUTH_COOKIE_PREFIX",
+        "BETTER_AUTH_SECRET",
+        "USER_ENCODING_KEY",
+        "BOTS_API_KEY_SECRET",
+        "DATABASE_URL",
+        "GOOGLE_ID",
+        "GOOGLE_SECRET",
+        "MICROSOFT_ID",
+        "MICROSOFT_SECRET",
+        "MICROSOFT_TENANT_ID",
+        "ZOOM_ID",
+        "ZOOM_SECRET",
+        "GITHUB_ID",
+        "GITHUB_SECRET",
+        "GITLAB_ID",
+        "GITLAB_SECRET",
+        "DOMAIN",
+        "TRUSTED_ORIGINS",
+        "NEXT_PUBLIC_ENVIRONMENT",
+        "NEXT_PUBLIC_BASE_DOMAIN",
+        "API_SERVER_BASEURL",
+        "NEXT_PUBLIC_REDIS_URL_MCP",
+        "AI_CHAT_DB",
+        "AI_CHAT_APP_URL",
+        "EMAIL_API_SERVER_BASEURL",
+        "EMAIL_SERVICE_API_KEY",
+        "NEXT_PUBLIC_SUPPORT_EMAIL"
+    ]
+}
