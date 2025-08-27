@@ -1,12 +1,12 @@
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
+import type { DateValueType } from "react-tailwindcss-datepicker/dist/types"
 import isUUID from "validator/lib/isUUID"
 import {
   allPlatforms,
   allStatuses,
   allUserReportedErrorStatuses
 } from "@/components/logs-table/column-helpers"
-import type { DateValueType } from "react-tailwindcss-datepicker/dist/types"
 import type { FilterState } from "@/components/logs-table/types"
 
 // Initialize dayjs UTC plugin

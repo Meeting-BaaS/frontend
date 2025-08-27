@@ -1,12 +1,12 @@
-import type { FormattedBotData } from "@/components/logs-table/types"
-import { createColumns } from "@/components/logs-table/columns"
-import { TableActions } from "@/components/logs-table/table-actions"
-import { formatCreatedAt, formatDuration } from "@/components/logs-table/column-helpers"
-import { StatusBadge } from "@/components/logs-table/status-badge"
-import { JsonPreview } from "@/components/logs-table/json-preview"
-import { cn } from "@/lib/utils"
+import { useSession } from "@repo/shared/hooks/use-session"
 import { useMemo } from "react"
-import { useSession } from "@/hooks/use-session"
+import { formatCreatedAt, formatDuration } from "@/components/logs-table/column-helpers"
+import { createColumns } from "@/components/logs-table/columns"
+import { JsonPreview } from "@/components/logs-table/json-preview"
+import { StatusBadge } from "@/components/logs-table/status-badge"
+import { TableActions } from "@/components/logs-table/table-actions"
+import type { FormattedBotData } from "@/components/logs-table/types"
+import { cn } from "@/lib/utils"
 
 interface ColumnMeta {
   displayName: string
@@ -23,7 +23,11 @@ export const SearchResult = ({
   searchStarted,
   isLoading,
   data
-}: { searchStarted: boolean; isLoading: boolean; data: FormattedBotData | null }) => {
+}: {
+  searchStarted: boolean
+  isLoading: boolean
+  data: FormattedBotData | null
+}) => {
   const session = useSession()
   const email = session?.user.email
   const columns = useMemo(() => createColumns(email), [email])
@@ -96,7 +100,6 @@ export const SearchResult = ({
             </h3>
             <div
               className={cn(transformedData[column.id as keyof typeof transformedData].className)}
-              aria-labelledby={`label-${column.id}`}
             >
               {transformedData[column.id as keyof typeof transformedData].value}
             </div>

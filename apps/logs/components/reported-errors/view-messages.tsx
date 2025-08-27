@@ -1,14 +1,14 @@
-import { ScrollArea } from "../ui/scroll-area"
-import { AnimatePresence, motion } from "motion/react"
-import { useEffect, useRef } from "react"
+import { Avatar, AvatarFallback } from "@repo/shared/components/ui/avatar"
+import { Button } from "@repo/shared/components/ui/button"
+import { ScrollArea } from "@repo/shared/components/ui/scroll-area"
+import { useSession } from "@repo/shared/hooks/use-session"
+import { AI_CHAT_URL } from "@repo/shared/lib/external-urls"
 import { AlertCircle, Fish, Loader2 } from "lucide-react"
-import { Avatar, AvatarFallback } from "../ui/avatar"
-import { Button } from "../ui/button"
-import type { UserReportedErrorMessage } from "@/components/logs-table/types"
-import { useSession } from "@/hooks/use-session"
-import { formatCreatedAt } from "@/components/logs-table/column-helpers"
+import { AnimatePresence, motion } from "motion/react"
 import Link from "next/link"
-import { AI_CHAT_URL } from "@/lib/external-urls"
+import { useEffect, useRef } from "react"
+import { formatCreatedAt } from "@/components/logs-table/column-helpers"
+import type { UserReportedErrorMessage } from "@/components/logs-table/types"
 
 interface ViewMessagesProps {
   messages: UserReportedErrorMessage[]
@@ -20,7 +20,6 @@ export const ViewMessages = ({ messages, retry }: ViewMessagesProps) => {
   const session = useSession()
   const currentUserEmail = session?.user.email
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: We need to scroll to the bottom of the list when a new messages is added
   useEffect(() => {
     if (scrollRef.current) {
       const scrollableContainer = scrollRef.current.querySelector(

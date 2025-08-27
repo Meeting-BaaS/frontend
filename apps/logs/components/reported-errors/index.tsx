@@ -1,5 +1,15 @@
 "use client"
 
+import { useQueryClient } from "@tanstack/react-query"
+import { useCallback, useEffect, useState } from "react"
+import type {
+  FormattedBotData,
+  UserReportedError,
+  UserReportedErrorMessage
+} from "@/components/logs-table/types"
+import { NewMessage } from "@/components/reported-errors/new-message"
+import { ViewMessages } from "@/components/reported-errors/view-messages"
+import { Badge } from "@/components/ui/badge"
 import {
   Dialog,
   DialogContent,
@@ -7,15 +17,8 @@ import {
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog"
-import type { UserReportedError, UserReportedErrorMessage } from "@/components/logs-table/types"
-import { useState, useEffect, useCallback } from "react"
-import { Badge } from "@/components/ui/badge"
-import { NewMessage } from "@/components/reported-errors/new-message"
 import { updateError } from "@/lib/api"
-import { ViewMessages } from "@/components/reported-errors/view-messages"
-import { useQueryClient } from "@tanstack/react-query"
-import type { FormattedBotData } from "@/components/logs-table/types"
-import { getErrorStatusVariant } from "@/lib/utils"
+import { getErrorStatusVariant } from "@/lib/app-utils"
 
 interface ReportedErrorDialogProps {
   row: FormattedBotData | null

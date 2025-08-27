@@ -3,15 +3,28 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
+      ]
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": [
+        "^check-types"
+      ]
     },
     "format": {
-      "dependsOn": ["^format"]
+      "dependsOn": [
+        "^format"
+      ]
     },
     "dev": {
       "cache": false,
@@ -45,6 +58,9 @@
     "AI_CHAT_APP_URL",
     "EMAIL_API_SERVER_BASEURL",
     "EMAIL_SERVICE_API_KEY",
-    "NEXT_PUBLIC_SUPPORT_EMAIL"
+    "NEXT_PUBLIC_SUPPORT_EMAIL",
+    "SELF_HOST",
+    "NEXT_PUBLIC_AUTH_APP_URL",
+    "IMAGE_HOST"
   ]
 }

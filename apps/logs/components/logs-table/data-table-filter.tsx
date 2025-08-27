@@ -1,7 +1,7 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@repo/shared/components/ui/button"
+import { Input } from "@repo/shared/components/ui/input"
 import { X } from "lucide-react"
 
 interface DataTableFilterProps {

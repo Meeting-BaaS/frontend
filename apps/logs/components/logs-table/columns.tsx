@@ -1,24 +1,24 @@
 "use client"
 
+import { Checkbox } from "@repo/shared/components/ui/checkbox"
+import { cn } from "@repo/shared/lib/utils"
 import type { ColumnDef } from "@tanstack/react-table"
-import type { FormattedBotData, StatusType, PlatformName } from "@/components/logs-table/types"
+import { Zap } from "lucide-react"
+import type { JSX } from "react"
 import {
-  formatCreatedAt,
   dateSort,
+  formatCreatedAt,
   formatDuration,
   formatPlatform
 } from "@/components/logs-table/column-helpers"
-import { SortableHeader } from "@/components/logs-table/sortable-header"
 import { CopyTooltip } from "@/components/logs-table/copy-tooltip"
-import { Zap } from "lucide-react"
-import { TableActions } from "@/components/logs-table/table-actions"
-import { JsonPreview } from "@/components/logs-table/json-preview"
-import { StatusBadge } from "@/components/logs-table/status-badge"
-import { cn } from "@/lib/utils"
-import type { JSX } from "react"
-import { Checkbox } from "@/components/ui/checkbox"
-import { isMeetingBaasUser } from "@/lib/utils"
 import { EmailTooltip } from "@/components/logs-table/email-tooltip"
+import { JsonPreview } from "@/components/logs-table/json-preview"
+import { SortableHeader } from "@/components/logs-table/sortable-header"
+import { StatusBadge } from "@/components/logs-table/status-badge"
+import { TableActions } from "@/components/logs-table/table-actions"
+import type { FormattedBotData } from "@/components/logs-table/types"
+import { isMeetingBaasUser } from "@/lib/app-utils"
 
 export const createColumns = (email?: string): ColumnDef<FormattedBotData>[] => [
   {

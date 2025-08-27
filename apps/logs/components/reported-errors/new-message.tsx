@@ -1,15 +1,23 @@
 "use client"
 
-import { updateError } from "@/lib/api"
-import { useSession } from "@/hooks/use-session"
-import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Button } from "@repo/shared/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@repo/shared/components/ui/select"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@repo/shared/components/ui/tooltip"
+import { useSession } from "@repo/shared/hooks/use-session"
+import { CircleCheck, SendHorizontal } from "lucide-react"
+import { useForm } from "react-hook-form"
 import type {
   UserReportedError,
   UserReportedErrorMessage,
   UserReportedErrorStatus
 } from "@/components/logs-table/types"
-import { newMessageSchema, type NewMessageFormData } from "@/lib/schemas/report-error"
 import {
   Form,
   FormControl,
@@ -20,10 +28,8 @@ import {
   FormMessage
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
-import { CircleCheck, SendHorizontal } from "lucide-react"
-import { Button } from "../ui/button"
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { updateError } from "@/lib/api"
+import { type NewMessageFormData, newMessageSchema } from "@/lib/schemas/report-error"
 
 interface NewMessageProps {
   bot_uuid: string

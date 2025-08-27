@@ -1,7 +1,7 @@
-import { AI_CHAT_URL } from "@/lib/external-urls"
-import { reportErrorServerSchema } from "@/lib/schemas/report-error"
-import { generateUUID } from "@/lib/utils"
+import { AI_CHAT_URL } from "@repo/shared/lib/external-urls"
+import { generateUUID } from "@repo/shared/lib/utils"
 import { type NextRequest, NextResponse } from "next/server"
+import { reportErrorServerSchema } from "@/lib/schemas/report-error"
 
 const apiServerBaseUrl = process.env.API_SERVER_BASEURL
 if (!apiServerBaseUrl) {
@@ -22,40 +22,46 @@ export async function POST(request: NextRequest) {
 
   try {
     const { bot_uuid, note } = reportErrorServerSchema.parse(body)
-
-    // 1. Create a chat with the error details
-    const chatId = generateUUID()
-    const messageId = generateUUID()
-
     const errorDetails = note ? ` Additional context: ${note}` : ""
+    let chatId: string | null = null
 
-    const chatResponse = await fetch(`${AI_CHAT_URL}/api/chat`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: request.cookies.toString()
-      },
-      body: JSON.stringify({
-        id: chatId,
-        messages: [
-          {
-            id: messageId,
-            role: "user",
-            parts: [
-              {
-                type: "text",
-                text: `I am facing an error with a bot and the bot id is ${bot_uuid}.Can you please help me with it?${errorDetails}`
-              }
-            ],
-            createdAt: new Date()
-          }
-        ],
-        selectedChatModel: "chat-model"
+    // If the AI Chat integration is enabled, we will create a chat with the error details
+    if (process.env.ENABLE_AI_CHAT_INTEGRATION === "true") {
+      console.log("Creating a chat with the error details")
+      // 1. Create a chat with the error details
+      chatId = generateUUID()
+      const messageId = generateUUID()
+
+      const chatResponse = await fetch(`${AI_CHAT_URL}/api/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: request.cookies.toString()
+        },
+        body: JSON.stringify({
+          id: chatId,
+          messages: [
+            {
+              id: messageId,
+              role: "user",
+              parts: [
+                {
+                  type: "text",
+                  text: `I am facing an error with a bot and the bot id is ${bot_uuid}.Can you please help me with it?${errorDetails}`
+                }
+              ],
+              createdAt: new Date()
+            }
+          ],
+          selectedChatModel: "chat-model"
+        })
       })
-    })
 
-    if (!chatResponse.ok) {
-      throw new Error(`Failed to create chat: ${chatResponse.status} ${chatResponse.statusText}`)
+      if (!chatResponse.ok) {
+        throw new Error(`Failed to create chat: ${chatResponse.status} ${chatResponse.statusText}`)
+      }
+    } else {
+      console.log("AI Chat integration is disabled. Skipping chat creation")
     }
 
     // 2. Report the error to the server
@@ -72,12 +78,13 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         bot_uuid,
         note: message,
-        chat_id: chatId,
+        ...(chatId ? { chat_id: chatId } : {}),
         status: "open"
       })
     })
 
-    if (!response.ok) {
+    // If the report error request fails and the AI Chat integration is enabled, we will delete the chat
+    if (!response.ok && chatId) {
       // Delete the chat from the AI Chat app if the report error request fails
       await fetch(`${AI_CHAT_URL}/api/chat?id=${chatId}`, {
         method: "DELETE",
@@ -89,22 +96,31 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Send an email to the user
-    const emailResponse = await fetch(`${process.env.EMAIL_API_SERVER_BASEURL}/error-report/new`, {
-      method: "POST",
-      body: JSON.stringify({
-        botUuid: bot_uuid,
-        chatId,
-        additionalContext: note
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: request.cookies.toString()
-      }
-    })
+    // Only send an email if the EMAIL_API_SERVER_BASEURL is set
+    if (process.env.EMAIL_API_SERVER_BASEURL) {
+      console.log("Sending an email to the user")
+      const emailResponse = await fetch(
+        `${process.env.EMAIL_API_SERVER_BASEURL}/error-report/new`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            botUuid: bot_uuid,
+            chatId,
+            additionalContext: note
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: request.cookies.toString()
+          }
+        }
+      )
 
-    if (!emailResponse.ok) {
-      // We don't want to fail the report error request if the email fails to send
-      console.error(`Failed to send email: ${emailResponse.status} ${emailResponse.statusText}`)
+      if (!emailResponse.ok) {
+        // We don't want to fail the report error request if the email fails to send
+        console.error(`Failed to send email: ${emailResponse.status} ${emailResponse.statusText}`)
+      }
+    } else {
+      console.log("Email API server base URL is not set. Skipping email sending")
     }
 
     return NextResponse.json({ success: true })

@@ -1,12 +1,12 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Check, Copy, Share2, X } from "lucide-react"
-import { toast } from "sonner"
+import { Button } from "@repo/shared/components/ui/button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@repo/shared/components/ui/tooltip"
 import type { RowSelectionState } from "@tanstack/react-table"
+import { Check, Copy, Share2 } from "lucide-react"
 import { useSearchParams } from "next/navigation"
-import { TooltipTrigger, Tooltip, TooltipContent } from "@/components/ui/tooltip"
 import { useState } from "react"
+import { toast } from "sonner"
 
 interface TableSelectionShareProps {
   rowSelection: RowSelectionState // Record<string, boolean> where keys are row indices

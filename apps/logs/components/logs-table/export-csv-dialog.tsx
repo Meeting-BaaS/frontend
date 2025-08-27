@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@repo/shared/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -10,16 +10,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from "@/components/ui/dialog"
-import { Download } from "lucide-react"
+} from "@repo/shared/components/ui/dialog"
+import { useSession } from "@repo/shared/hooks/use-session"
 import type { Table } from "@tanstack/react-table"
 import dayjs from "dayjs"
-import type { DateValueType } from "react-tailwindcss-datepicker"
-import type { FilterState, FormattedBotData } from "@/components/logs-table/types"
-import { createColumns } from "@/components/logs-table/columns"
-import { CSVLink } from "react-csv"
+import { Download } from "lucide-react"
 import { useMemo } from "react"
-import { useSession } from "@/hooks/use-session"
+import { CSVLink } from "react-csv"
+import type { DateValueType } from "react-tailwindcss-datepicker"
+import { createColumns } from "@/components/logs-table/columns"
+import type { FilterState, FormattedBotData } from "@/components/logs-table/types"
 
 interface ColumnMeta {
   displayName: string

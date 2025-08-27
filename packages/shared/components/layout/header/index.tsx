@@ -1,0 +1,53 @@
+import { getAuthAppUrl } from "@repo/shared/auth/auth-app-url"
+import type { User } from "@repo/shared/auth/types"
+import { GitHubLogo } from "@repo/shared/components/icons/github"
+import { ThemeToggle } from "@repo/shared/components/layout/header/theme-toggle"
+import { UserAvatar } from "@repo/shared/components/layout/header/user-avatar"
+import { GITHUB_REPO_URL } from "@repo/shared/lib/external-urls"
+import Image from "next/image"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+
+interface HeaderProps {
+  user: User
+  currentPath: string
+}
+
+export default function Header({ user, currentPath }: HeaderProps) {
+  return (
+    <header className="mx-auto box-content w-full max-w-container border-b bg-background/15 backdrop-blur-md lg:top-2 lg:mt-2 lg:w-[calc(100%-4rem)] lg:rounded-2xl lg:border">
+      <nav className="flex h-12 w-full flex-row items-center justify-between px-4">
+        <Link href={`${getAuthAppUrl()}/home`}>
+          <div className="flex items-center gap-2">
+            <Image
+              src="/logo.svg"
+              alt="Meeting BaaS logo"
+              priority
+              width={20}
+              height={20}
+              className="h-5 w-5"
+            />
+            <span className="font-bold text-md">Meeting BaaS</span>
+          </div>
+        </Link>
+        <div className="flex items-center gap-3">
+          <div className="flex gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="fill-foreground"
+              asChild
+              aria-label="Github repository"
+            >
+              <Link href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">
+                <GitHubLogo />
+              </Link>
+            </Button>
+            <ThemeToggle className="hidden md:flex" />
+          </div>
+          <UserAvatar user={user} currentPath={currentPath} />
+        </div>
+      </nav>
+    </header>
+  )
+}

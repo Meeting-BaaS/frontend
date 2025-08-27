@@ -1,15 +1,15 @@
 "use client"
 
 import useEmblaCarousel from "embla-carousel-react"
+import { AlertCircle, Loader2 } from "lucide-react"
+import Image from "next/image"
+import { useState } from "react"
 import type { Screenshot } from "@/components/logs-table/types"
 import {
   NextButton,
   PrevButton,
   usePrevNextButtons
 } from "@/components/screenshot-viewer/carousel-arrow-buttons"
-import Image from "next/image"
-import { useState } from "react"
-import { AlertCircle, Loader2 } from "lucide-react"
 
 interface ScreenshotCarouselProps {
   screenshots: Screenshot[]
@@ -38,7 +38,7 @@ export function ScreenshotCarousel({ screenshots }: ScreenshotCarouselProps) {
         <div className="flex h-full w-full">
           {screenshots.map((screenshot, index) => (
             <div
-              key={index}
+              key={screenshot.url}
               className="relative flex min-w-0 flex-[0_0_100%] items-center justify-center"
             >
               {imageErrors[index] ? (

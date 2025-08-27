@@ -1,5 +1,5 @@
-import { ScreenshotViewerContext } from "@/contexts/screenshot-viewer-context"
 import { useContext } from "react"
+import { ScreenshotViewerContext } from "@/contexts/screenshot-viewer-context"
 
 export function useScreenshotViewer() {
   const context = useContext(ScreenshotViewerContext)

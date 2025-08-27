@@ -1,5 +1,5 @@
+import { Button } from "@repo/shared/components/ui/button"
 import { ArrowLeft } from "lucide-react"
-import { Button } from "../ui/button"
 import { AnimatePresence, motion } from "motion/react"
 import { usePostMessage } from "@/hooks/use-post-message"
 

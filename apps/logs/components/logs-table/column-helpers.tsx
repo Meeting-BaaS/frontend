@@ -1,15 +1,15 @@
-import dayjs from "dayjs"
-import relativeTime from "dayjs/plugin/relativeTime"
-import duration from "dayjs/plugin/duration"
-import utc from "dayjs/plugin/utc"
-import timezone from "dayjs/plugin/timezone"
+import { cn } from "@repo/shared/lib/utils"
 import type { SortingFn } from "@tanstack/react-table"
-import type { FormattedBotData, PlatformName, StatusType } from "@/components/logs-table/types"
-import { ZoomLogo } from "@/components/icons/zoom"
-import { MicrosoftTeamsLogo } from "@/components/icons/microsoft-teams"
-import { GoogleMeetLogo } from "@/components/icons/google-meet"
+import dayjs from "dayjs"
+import duration from "dayjs/plugin/duration"
+import relativeTime from "dayjs/plugin/relativeTime"
+import timezone from "dayjs/plugin/timezone"
+import utc from "dayjs/plugin/utc"
 import { AlertTriangle } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { GoogleMeetLogo } from "@/components/icons/google-meet"
+import { MicrosoftTeamsLogo } from "@/components/icons/microsoft-teams"
+import { ZoomLogo } from "@/components/icons/zoom"
+import type { FormattedBotData, PlatformName } from "@/components/logs-table/types"
 
 // Initialize dayjs plugins
 dayjs.extend(relativeTime)
@@ -90,7 +90,7 @@ export const formatPlatform = (platform: PlatformName) => {
   }
 }
 
-export const dateSort: SortingFn<FormattedBotData> = (rowA, rowB, columnId) => {
+export const dateSort: SortingFn<FormattedBotData> = (rowA, rowB) => {
   const dateA = dayjs(rowA.original.created_at)
   const dateB = dayjs(rowB.original.created_at)
 

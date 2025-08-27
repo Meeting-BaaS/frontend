@@ -1,15 +1,15 @@
 import { useQuery } from "@tanstack/react-query"
-import { fetchLogs } from "@/lib/api"
+import dayjs from "dayjs"
+import { useMemo } from "react"
 import type {
   BotPaginated,
   FilterState,
   FormattedBotData,
   FormattedBotPaginated
 } from "@/components/logs-table/types"
+import { fetchLogs } from "@/lib/api"
 import { getPlatformFromUrl } from "@/lib/format-logs"
-import dayjs from "dayjs"
 import { usePostMessage } from "./use-post-message"
-import { useMemo } from "react"
 
 interface UseLogsParams {
   offset: number
@@ -49,7 +49,8 @@ export function useLogs({
       }
     ],
     queryFn: () => {
-      const { platformFilters, statusFilters, userReportedErrorStatusFilters, userEmailFilter } = filters
+      const { platformFilters, statusFilters, userReportedErrorStatusFilters, userEmailFilter } =
+        filters
       const queryParams = {
         offset,
         limit: pageSize,

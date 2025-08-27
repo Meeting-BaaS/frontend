@@ -1,17 +1,6 @@
 "use client"
 
-import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  type RowSelectionState,
-  type SortingState,
-  type VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  useReactTable
-} from "@tanstack/react-table"
+import { Button } from "@repo/shared/components/ui/button"
 
 import {
   Table,
@@ -20,22 +9,33 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
+} from "@repo/shared/components/ui/table"
+import { cn } from "@repo/shared/lib/utils"
+import {
+  type ColumnDef,
+  type ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  type RowSelectionState,
+  type SortingState,
+  useReactTable,
+  type VisibilityState
+} from "@tanstack/react-table"
+import { Loader2 } from "lucide-react"
 import { useState } from "react"
+import type { DateValueType } from "react-tailwindcss-datepicker"
+import { BotSearch } from "@/components/bot-search"
+import { AdditionalFilters } from "@/components/logs-table/additional-filters"
+import { BackToAllLogs } from "@/components/logs-table/back-to-all-logs"
 import { ColumnVisibilityDropdown } from "@/components/logs-table/column-visibility-dropdown"
 import { DataTableFilter } from "@/components/logs-table/data-table-filter"
-import { cn } from "@/lib/utils"
-import { AdditionalFilters } from "@/components/logs-table/additional-filters"
-import { Loader2 } from "lucide-react"
-import type { DateValueType } from "react-tailwindcss-datepicker"
 import { DateRangeFilter } from "@/components/logs-table/date-range-filter"
 import { ExportCsvDialog } from "@/components/logs-table/export-csv-dialog"
 import { PageSizeSelector } from "@/components/logs-table/page-size-selector"
-import { BotSearch } from "@/components/bot-search"
-import type { FilterState, FormattedBotData } from "@/components/logs-table/types"
 import { TableSelectionShare } from "@/components/logs-table/table-selection-share"
-import { BackToAllLogs } from "@/components/logs-table/back-to-all-logs"
+import type { FilterState, FormattedBotData } from "@/components/logs-table/types"
 
 interface DataTableProps<TData extends FormattedBotData, TValue> {
   columns: ColumnDef<TData, TValue>[]

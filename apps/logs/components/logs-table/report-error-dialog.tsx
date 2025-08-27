@@ -1,6 +1,7 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Button } from "@repo/shared/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -9,7 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from "@/components/ui/dialog"
+} from "@repo/shared/components/ui/dialog"
 import {
   Form,
   FormControl,
@@ -18,17 +19,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from "@/components/ui/form"
-import { Textarea } from "@/components/ui/textarea"
-import { reportErrorSchema, type ReportErrorFormData } from "@/lib/schemas/report-error"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { reportError } from "@/lib/api"
-import { toast } from "sonner"
-import { useState } from "react"
-import { Loader2 } from "lucide-react"
+} from "@repo/shared/components/ui/form"
+import { Textarea } from "@repo/shared/components/ui/textarea"
 import { useQueryClient } from "@tanstack/react-query"
+import { Loader2 } from "lucide-react"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import type { FormattedBotData } from "@/components/logs-table/types"
+import { reportError } from "@/lib/api"
+import { type ReportErrorFormData, reportErrorSchema } from "@/lib/schemas/report-error"
+
 interface ReportErrorDialogProps {
   row: FormattedBotData | null
   open: boolean

@@ -1,10 +1,10 @@
 "use client"
 
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
+import { Button } from "@repo/shared/components/ui/button"
+import { Input } from "@repo/shared/components/ui/input"
+import { Label } from "@repo/shared/components/ui/label"
 import { X } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 
 interface EmailFilterProps {
   value?: string

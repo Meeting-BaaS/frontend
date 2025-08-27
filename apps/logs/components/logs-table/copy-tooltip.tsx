@@ -1,8 +1,8 @@
 "use client"
 
+import { Tooltip, TooltipContent, TooltipTrigger } from "@repo/shared/components/ui/tooltip"
+import { cn } from "@repo/shared/lib/utils"
 import { useState } from "react"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 
 interface CopyTooltipProps {

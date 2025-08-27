@@ -1,12 +1,16 @@
 "use client"
 
-import { useState } from "react"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { cn } from "@/lib/utils"
-import { useSearchParams } from "next/navigation"
-import { toast } from "sonner"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@repo/shared/components/ui/dropdown-menu"
+import { cn } from "@repo/shared/lib/utils"
 import { Copy, Mail } from "lucide-react"
+import { useSearchParams } from "next/navigation"
+import { useState } from "react"
+import { toast } from "sonner"
 
 interface EmailTooltipProps {
   email: string

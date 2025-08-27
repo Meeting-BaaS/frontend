@@ -1,17 +1,18 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { RotateCcw, ExternalLink, Loader2, Image, Logs, Fish } from "lucide-react"
-import type { FormattedBotData } from "@/components/logs-table/types"
-import { RECORDING_VIEWER_URL } from "@/lib/external-urls"
-import { fetchScreenshots } from "@/lib/api"
-import { toast } from "sonner"
+import { Button } from "@repo/shared/components/ui/button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@repo/shared/components/ui/tooltip"
+import { useSession } from "@repo/shared/hooks/use-session"
+import { RECORDING_VIEWER_URL } from "@repo/shared/lib/external-urls"
+import { cn } from "@repo/shared/lib/utils"
+import { ExternalLink, Fish, Image, Loader2, Logs, RotateCcw } from "lucide-react"
 import { useState } from "react"
-import { cn, isMeetingBaasUser } from "@/lib/utils"
+import { toast } from "sonner"
+import type { FormattedBotData } from "@/components/logs-table/types"
 import { useScreenshotViewer } from "@/hooks/use-screenshot-viewer"
-import { useSession } from "@/hooks/use-session"
 import { useTableDialogs } from "@/hooks/use-table-dialogs"
+import { fetchScreenshots } from "@/lib/api"
+import { isMeetingBaasUser } from "@/lib/app-utils"
 
 const iconClasses = "size-4"
 
@@ -116,56 +117,54 @@ export function TableActions({ row, containerClassName }: TableActionsProps) {
   }
 
   return (
-    <>
-      <div className={cn("flex w-full justify-between gap-2", containerClassName)}>
-        <IconButton
-          icon={<Logs className={iconClasses} />}
-          tooltip="Debug bot logs"
-          onClick={handleDebugDialog}
-        />
-        <IconButton
-          icon={<RotateCcw className={iconClasses} />}
-          tooltip="Resend Final Webhook"
-          onClick={handleResendWebhook}
-        />
-        <IconButton
-          icon={<ExternalLink className={iconClasses} />}
-          tooltip="View recording"
-          onClick={handleViewRecording}
-        />
-        <IconButton
-          icon={
-            <Fish
-              className={cn(
-                iconClasses,
-                "stroke-primary",
-                row.user_reported_error?.status === "open" && "stroke-amber-500",
-                row.user_reported_error?.status === "in_progress" && "stroke-baas-warning-500"
-              )}
-            />
-          }
-          tooltip={row.user_reported_error ? "Reported error" : "Report error"}
-          onClick={handleReportError}
-        >
-          {row.user_reported_error && (
-            <div
-              className={cn(
-                "absolute top-0.5 right-1.5 size-2 rounded-full",
-                row.user_reported_error.status === "open" && "bg-destructive",
-                row.user_reported_error.status === "closed" && "bg-green-500",
-                row.user_reported_error.status === "in_progress" && "bg-baas-warning-500"
-              )}
-            />
-          )}
-        </IconButton>
-        <IconButton
-          icon={<Image className={iconClasses} />}
-          tooltip="View screenshots"
-          onClick={handleViewScreenshots}
-          loading={screenshotsLoading}
-          disabled={row.platform === "zoom"} // We don't support screenshots for Zoom yet
-        />
-      </div>
-    </>
+    <div className={cn("flex w-full justify-between gap-2", containerClassName)}>
+      <IconButton
+        icon={<Logs className={iconClasses} />}
+        tooltip="Debug bot logs"
+        onClick={handleDebugDialog}
+      />
+      <IconButton
+        icon={<RotateCcw className={iconClasses} />}
+        tooltip="Resend Final Webhook"
+        onClick={handleResendWebhook}
+      />
+      <IconButton
+        icon={<ExternalLink className={iconClasses} />}
+        tooltip="View recording"
+        onClick={handleViewRecording}
+      />
+      <IconButton
+        icon={
+          <Fish
+            className={cn(
+              iconClasses,
+              "stroke-primary",
+              row.user_reported_error?.status === "open" && "stroke-amber-500",
+              row.user_reported_error?.status === "in_progress" && "stroke-baas-warning-500"
+            )}
+          />
+        }
+        tooltip={row.user_reported_error ? "Reported error" : "Report error"}
+        onClick={handleReportError}
+      >
+        {row.user_reported_error && (
+          <div
+            className={cn(
+              "absolute top-0.5 right-1.5 size-2 rounded-full",
+              row.user_reported_error.status === "open" && "bg-destructive",
+              row.user_reported_error.status === "closed" && "bg-green-500",
+              row.user_reported_error.status === "in_progress" && "bg-baas-warning-500"
+            )}
+          />
+        )}
+      </IconButton>
+      <IconButton
+        icon={<Image className={iconClasses} />}
+        tooltip="View screenshots"
+        onClick={handleViewScreenshots}
+        loading={screenshotsLoading}
+        disabled={row.platform === "zoom"} // We don't support screenshots for Zoom yet
+      />
+    </div>
   )
 }

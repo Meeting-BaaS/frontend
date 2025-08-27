@@ -1,7 +1,7 @@
 "use client"
 
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
+import { Checkbox } from "@repo/shared/components/ui/checkbox"
+import { Label } from "@repo/shared/components/ui/label"
 import type { Option } from "@/components/logs-table/column-helpers"
 
 interface CheckboxFilterProps {

@@ -17,7 +17,8 @@
     "**/*.tsx",
     "../../packages/shared/**/*.ts",
     "../../packages/shared/**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../logs/components/logs-table/sort-icon.tsx"
   ],
   "exclude": ["node_modules"]
 }

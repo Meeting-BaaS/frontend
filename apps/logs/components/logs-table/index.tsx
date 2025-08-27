@@ -1,22 +1,22 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
-import { DataTable } from "@/components/logs-table/data-table"
-import { createColumns } from "@/components/logs-table/columns"
+import { useSession } from "@repo/shared/hooks/use-session"
 import { Loader2 } from "lucide-react"
-import { useLogs } from "@/hooks/use-logs"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useMemo, useState } from "react"
 import type { DateValueType } from "react-tailwindcss-datepicker/dist/types"
+import { createColumns } from "@/components/logs-table/columns"
+import { DataTable } from "@/components/logs-table/data-table"
 import { PAGE_SIZE_STORAGE_KEY, pageSizeOptions } from "@/components/logs-table/page-size-selector"
 import type { FilterState } from "@/components/logs-table/types"
-import { useSearchParams, useRouter } from "next/navigation"
+import { useLogs } from "@/hooks/use-logs"
+import { isMeetingBaasUser } from "@/lib/app-utils"
 import {
-  validateDateRange,
-  validateFilterValues,
+  updateSearchParams,
   validateBotUuids,
-  updateSearchParams
+  validateDateRange,
+  validateFilterValues
 } from "@/lib/search-params"
-import { useSession } from "@/hooks/use-session"
-import { isMeetingBaasUser } from "@/lib/utils"
 
 export const DEFAULT_PAGE_SIZE = pageSizeOptions[0].value
 

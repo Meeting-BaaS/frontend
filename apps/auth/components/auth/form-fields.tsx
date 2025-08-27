@@ -89,6 +89,7 @@ export const FormFields = ({ loading, formType }: FormFieldsProps) => {
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     disabled={loading}
+                    className="border-foreground"
                   />
                 </FormControl>
                 <FormLabel className="flex-wrap gap-1">
@@ -116,6 +117,7 @@ export const FormFields = ({ loading, formType }: FormFieldsProps) => {
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     disabled={loading}
+                    className="border-foreground"
                   />
                 </FormControl>
                 <FormLabel className="flex-wrap gap-1">

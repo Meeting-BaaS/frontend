@@ -1,8 +1,8 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
-import type { StatusType } from "@/components/logs-table/types"
+import { Badge } from "@repo/shared/components/ui/badge"
 import { CopyHoverCard } from "@/components/logs-table/copy-hover-card"
+import type { StatusType } from "@/components/logs-table/types"
 
 interface StatusBadgeProps {
   text: string

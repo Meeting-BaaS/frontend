@@ -1,6 +1,14 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Button } from "@repo/shared/components/ui/button"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage
+} from "@repo/shared/components/ui/form"
 import {
   Sheet,
   SheetContent,
@@ -8,22 +16,20 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger
-} from "@/components/ui/sheet"
+} from "@repo/shared/components/ui/sheet"
+import { isEqual } from "lodash-es"
+import { Filter, FunnelX } from "lucide-react"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
 import { CheckboxFilter } from "@/components/logs-table/checkbox-filter"
-import { EmailFilter } from "@/components/logs-table/email-filter"
 import {
   allPlatforms,
   allStatuses,
   allUserReportedErrorStatuses
 } from "@/components/logs-table/column-helpers"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
-import { filtersSchema, type FiltersFormData } from "@/lib/schemas/filters"
-import { Filter, FunnelX } from "lucide-react"
+import { EmailFilter } from "@/components/logs-table/email-filter"
 import type { FilterState } from "@/components/logs-table/types"
-import { useState } from "react"
-import { isEqual } from "lodash"
+import { type FiltersFormData, filtersSchema } from "@/lib/schemas/filters"
 
 const filtersFields = [
   {
@@ -109,7 +115,7 @@ export function AdditionalFilters({
 
   const isFiltered = Object.entries(filters).some(([key, value]) => {
     // Skip email filter for non-Meeting BaaS users
-    if (key === 'userEmailFilter' && !isMeetingBaasUser) {
+    if (key === "userEmailFilter" && !isMeetingBaasUser) {
       return false
     }
     if (Array.isArray(value)) {
@@ -161,7 +167,7 @@ export function AdditionalFilters({
                   <FormItem>
                     <FormControl>
                       <EmailFilter
-                        value={typeof field.value === 'string' ? field.value : ""}
+                        value={typeof field.value === "string" ? field.value : ""}
                         onFilterChange={(value) => field.onChange(value)}
                       />
                     </FormControl>

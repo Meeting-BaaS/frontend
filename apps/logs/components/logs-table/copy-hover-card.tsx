@@ -1,11 +1,15 @@
 "use client"
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
-import { Button } from "@/components/ui/button"
-import { Copy, Check } from "lucide-react"
-import { toast } from "sonner"
-import { cn } from "@/lib/utils"
+import { Button } from "@repo/shared/components/ui/button"
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger
+} from "@repo/shared/components/ui/hover-card"
+import { cn } from "@repo/shared/lib/utils"
+import { Check, Copy } from "lucide-react"
 import { useState } from "react"
+import { toast } from "sonner"
 
 interface CopyHoverCardProps {
   trigger: React.ReactNode

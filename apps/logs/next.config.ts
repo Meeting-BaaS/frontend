@@ -6,12 +6,6 @@ if (!process.env.API_SERVER_BASEURL) {
   )
 }
 
-if (!process.env.EMAIL_API_SERVER_BASEURL) {
-  throw new Error(
-    "EMAIL_API_SERVER_BASEURL is not defined in the environment variables. Please set it in your .env file."
-  )
-}
-
 if (!process.env.IMAGE_HOST) {
   throw new Error(
     "IMAGE_HOST is not defined in the environment variables. Please set it in your .env file."
@@ -19,6 +13,7 @@ if (!process.env.IMAGE_HOST) {
 }
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["@repo/shared"],
   async rewrites() {
     const apiServerBaseUrl = process.env.API_SERVER_BASEURL
     return [

@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from "@/components/ui/select"
+} from "@repo/shared/components/ui/select"
 import { useEffect } from "react"
 
 export const PAGE_SIZE_STORAGE_KEY = "logs-table-page-size"

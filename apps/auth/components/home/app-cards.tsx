@@ -79,7 +79,7 @@ export const AppCardsSection = ({
               <Card
                 key={title}
                 className={cn(
-                  "group relative grow transition-colors",
+                  "group dark:bg-baas-black dark:bg-[linear-gradient(238deg,#161616,hsla(0,0%,9%,0))] relative grow transition-colors",
                   appLink && "cursor-pointer hover:border-baas-primary-700"
                 )}
                 aria-label={`${title} card - click to open app`}
@@ -157,7 +157,7 @@ export const AppCardsSection = ({
             No applications available
           </p>
         )}
-        <Card className="group relative grow p-0">
+        <Card className="group relative dark:bg-baas-black dark:bg-[linear-gradient(238deg,#161616,hsla(0,0%,9%,0))] grow p-0">
           <CardContent className="card-grid grid grow grid-cols-2 grid-rows-2 p-0">
             {utilities.map(({ title, icon, href, className, showWebhookStatusDot }) => (
               <Button

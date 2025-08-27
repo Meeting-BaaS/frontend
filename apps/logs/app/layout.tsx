@@ -1,15 +1,16 @@
 import "@/app/globals.css"
-import { Toaster } from "@/components/ui/sonner"
-import { getAuthSession } from "@/lib/auth/session"
+import { getAuthAppUrl } from "@repo/shared/auth/auth-app-url"
+import { getAuthSession } from "@repo/shared/auth/session"
+import { Toaster } from "@repo/shared/components/ui/sonner"
+import { LOGS_URL } from "@repo/shared/lib/external-urls"
+import { isbot } from "isbot"
 import type { Metadata, Viewport } from "next"
 import { Sofia_Sans } from "next/font/google"
 import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
 import LayoutRoot from "@/app/layout-root"
-import Providers from "@/components/providers"
-import { getAuthAppUrl } from "@/lib/auth/auth-app-url"
-import { isbot } from "isbot"
 import NotFound from "@/app/not-found"
+import Providers from "@/components/providers"
 
 const sofiaSans = Sofia_Sans({
   subsets: ["latin"],
@@ -18,6 +19,7 @@ const sofiaSans = Sofia_Sans({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(LOGS_URL),
   title: "Logs | Meeting BaaS",
   description: "Track your meeting bots and view the status of your recordings.",
   keywords: [
@@ -45,7 +47,7 @@ export const metadata: Metadata = {
     title: "Logs | Meeting BaaS",
     description: "Track your meeting bots and view the status of your recordings.",
     siteName: "Meeting BaaS",
-    url: "https://logs.meetingbaas.com",
+    url: LOGS_URL,
     locale: "en_US",
     images: [
       {

@@ -1,5 +1,5 @@
-import { z } from "zod"
 import isURL from "validator/lib/isURL"
+import { z } from "zod"
 
 export const webhookResendSchema = z.object({
   webhookUrl: z

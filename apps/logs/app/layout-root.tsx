@@ -1,9 +1,10 @@
 "use client"
 
-import type { Session } from "@/lib/auth/types"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
-import { useSession } from "@/hooks/use-session"
+import type { Session } from "@repo/shared/auth/types"
+import Footer from "@repo/shared/components/layout/footer"
+import Header from "@repo/shared/components/layout/header"
+import { useSession } from "@repo/shared/hooks/use-session"
+import { LOGS_URL } from "@repo/shared/lib/external-urls"
 
 interface LayoutRootProps {
   session: Session
@@ -19,9 +20,9 @@ export default function LayoutRoot({ children, session: initialSession }: Layout
 
   return (
     <>
-      <Header user={session.user} />
+      <Header user={session.user} currentPath={LOGS_URL} />
       <main className="flex grow flex-col">{children}</main>
-      <Footer />
+      <Footer title="Logs" />
     </>
   )
 }

@@ -1,6 +1,6 @@
-import { createContext, useState, useEffect, type ReactNode, useCallback } from "react"
+import { BOT_ANALYTICS_URL } from "@repo/shared/lib/external-urls"
 import { useRouter, useSearchParams } from "next/navigation"
-import { BOT_ANALYTICS_URL } from "@/lib/external-urls"
+import { createContext, type ReactNode, useCallback, useEffect, useState } from "react"
 
 interface PostMessageContextType {
   botUuids: string[]

@@ -73,7 +73,7 @@
   --muted-foreground: oklch(0.72 0 0);
   --accent: var(--baas-neutral-500);
   --accent-foreground: var(--foreground);
-  --destructive: var(--baas-warning-500);
+  --destructive: oklch(0.64 0.2465 18.31);
   --border: var(--baas-neutral-500);
   --input: var(--baas-neutral-500);
   --ring: oklch(0.67 0.143484 235.7191);

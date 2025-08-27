@@ -20,6 +20,10 @@
   --zoom-blue: oklch(0.65 0.1915 256.03);
 }
 
+.dark {
+  --destructive: var(--baas-warning-500);
+}
+
 @media (pointer: coarse) {
   .pointer-touch-opacity-100 {
     opacity: 100%;

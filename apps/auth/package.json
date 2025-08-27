@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "with-env": "dotenv -e ../../.env --",
-    "dev": "pnpm with-env next dev --port 3001 --turbopack",
+    "dev": "pnpm with-env next dev --port 3002 --turbopack",
     "build": "pnpm with-env next build",
     "start": "pnpm with-env next start",
     "lint": "biome lint .",

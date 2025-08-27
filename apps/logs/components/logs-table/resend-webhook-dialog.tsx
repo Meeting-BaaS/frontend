@@ -1,6 +1,7 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Button } from "@repo/shared/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -9,7 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from "@/components/ui/dialog"
+} from "@repo/shared/components/ui/dialog"
 import {
   Form,
   FormControl,
@@ -17,16 +18,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { retryWebhook } from "@/lib/api"
-import { webhookResendSchema, type WebhookResendFormData } from "@/lib/schemas/webhook-resend"
-import { zodResolver } from "@hookform/resolvers/zod"
+} from "@repo/shared/components/ui/form"
+import { Input } from "@repo/shared/components/ui/input"
 import { Loader2 } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import type { FormattedBotData } from "@/components/logs-table/types"
+import { retryWebhook } from "@/lib/api"
+import { type WebhookResendFormData, webhookResendSchema } from "@/lib/schemas/webhook-resend"
 
 interface ResendWebhookDialogProps {
   row: FormattedBotData | null

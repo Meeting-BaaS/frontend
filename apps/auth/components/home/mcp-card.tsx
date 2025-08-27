@@ -149,7 +149,7 @@ export const McpCard = ({ server, theme, apiKey }: McpCardProps) => {
     server.localConfig
 
   return (
-    <Card className="group relative grow">
+    <Card className="group dark:bg-baas-black dark:bg-[linear-gradient(238deg,#161616,hsla(0,0%,9%,0))] relative grow">
       <CardContent className="flex grow flex-col justify-between gap-2 pt-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 font-semibold text-xl">{server.displayName}</div>

@@ -1,8 +1,9 @@
+import { Button } from "@repo/shared/components/ui/button"
+import { cn } from "@repo/shared/lib/utils"
 import type { Column } from "@tanstack/react-table"
+import { SortIcon } from "@/components/logs-table/sort-icon"
 import type { FormattedBotData } from "@/components/logs-table/types"
-import { Button } from "@/components/ui/button"
-import { SortIcon } from "@/components/ui/sort-icon"
-import { cn } from "@/lib/utils"
+
 const sortButtonClasses = "p-0 hover:bg-transparent dark:hover:bg-transparent"
 
 export const SortableHeader = ({

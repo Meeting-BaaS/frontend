@@ -1,5 +1,5 @@
-import type { UserReportedErrorStatus } from "@/components/logs-table/types"
 import { z } from "zod"
+import type { UserReportedErrorStatus } from "@/components/logs-table/types"
 
 export const statusEnum: UserReportedErrorStatus[] = ["open", "in_progress", "closed"]
 

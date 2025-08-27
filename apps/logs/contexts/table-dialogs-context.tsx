@@ -1,11 +1,12 @@
 "use client"
 
-import { createContext, useCallback, useMemo, useState } from "react"
-import type { FormattedBotData } from "@/components/logs-table/types"
-import { ResendWebhookDialog } from "@/components/logs-table/resend-webhook-dialog"
-import { ReportErrorDialog } from "@/components/logs-table/report-error-dialog"
-import ReportedErrorDialog from "@/components/reported-errors"
 import dynamic from "next/dynamic"
+import { createContext, useCallback, useMemo, useState } from "react"
+import { ReportErrorDialog } from "@/components/logs-table/report-error-dialog"
+import { ResendWebhookDialog } from "@/components/logs-table/resend-webhook-dialog"
+import type { FormattedBotData } from "@/components/logs-table/types"
+import ReportedErrorDialog from "@/components/reported-errors"
+
 // Dynamically import the DebugDialog component for Meeting Baas users and reduce the bundle size for non-Meeting Baas users
 const DebugDialog = dynamic(() => import("@/components/debug/debug-dialog"), { ssr: false })
 

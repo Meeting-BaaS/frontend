@@ -1,27 +1,23 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@repo/shared/*": ["../../packages/shared/*"],
+      "@repo/shared/components/ui/*": ["../../packages/shared/components/ui/*"],
+      "@repo/shared/lib/*": ["../../packages/shared/lib/*"],
+      "@repo/shared/animations/*": ["../../packages/shared/animations/*"],
+      "@/lib/utils": ["../../packages/shared/lib/utils"],
+      "@/components/ui/*": ["../../packages/shared/components/ui/*"],
+      "@/animations/*": ["../../packages/shared/animations/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "../../packages/shared/**/*.ts",
+    "../../packages/shared/**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }

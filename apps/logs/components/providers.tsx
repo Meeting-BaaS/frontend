@@ -1,12 +1,13 @@
 "use client"
 
+import { JwtProvider } from "@repo/shared/contexts/jwt-context"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ThemeProvider } from "next-themes"
-import { JwtProvider } from "@/contexts/jwt-context"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { PostMessageProvider } from "@/contexts/post-message-context"
 import { ScreenshotViewerProvider } from "@/contexts/screenshot-viewer-context"
 import { TableDialogsProvider } from "@/contexts/table-dialogs-context"
-import { PostMessageProvider } from "@/contexts/post-message-context"
+
 const queryClient = new QueryClient()
 
 export default function Providers({

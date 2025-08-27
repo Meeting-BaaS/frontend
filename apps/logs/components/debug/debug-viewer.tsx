@@ -1,10 +1,10 @@
 "use client"
 
-import { useRef, useState, useCallback, useEffect } from "react"
-import { ChevronUp, ChevronDown, X } from "lucide-react"
-import { Input } from "../ui/input"
-import { Button } from "../ui/button"
+import { Button } from "@repo/shared/components/ui/button"
+import { Input } from "@repo/shared/components/ui/input"
+import { ChevronDown, ChevronUp, X } from "lucide-react"
 import Mark from "mark.js"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 interface DebugViewerProps {
   html: string
@@ -93,6 +93,7 @@ export function DebugViewer({ html }: DebugViewerProps) {
     <>
       <div className="relative md:mr-4">
         <Input
+          name="search"
           type="text"
           placeholder="Find in logs..."
           value={searchQuery}

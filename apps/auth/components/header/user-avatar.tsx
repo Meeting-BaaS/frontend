@@ -88,12 +88,7 @@ export const UserAvatar = ({ user }: { user: User }) => {
           <Fragment key={menuOption.title}>
             {menuOption.separator && <DropdownMenuSeparator />}
             <DropdownMenuItem asChild>
-              <Link
-                rel="noopener noreferrer"
-                href={menuOption.href}
-                target="_blank"
-                className="cursor-pointer"
-              >
+              <Link href={menuOption.href} className="cursor-pointer">
                 {menuOption.title}
               </Link>
             </DropdownMenuItem>
