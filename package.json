@@ -3,7 +3,10 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "build:app": "turbo run build --filter",
     "dev": "turbo run dev",
+    "start": "turbo run start",
+    "start:app": "turbo run start --filter",
     "lint": "biome lint .",
     "check-types": "turbo run check-types",
     "format": "biome format --write .",

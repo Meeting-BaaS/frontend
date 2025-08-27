@@ -1,12 +1,12 @@
 {
-  "name": "logs-table",
+  "name": "logs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "with-env": "dotenv -e ../../.env --",
     "dev": "pnpm with-env next dev --port 3003 --turbopack",
     "build": "pnpm with-env next build",
-    "start": "pnpm with-env next start",
+    "start": "NODE_ENV=production pnpm with-env next start --port 3003",
     "lint": "biome lint .",
     "format": "biome format --write .",
     "check-types": "tsc --noEmit"

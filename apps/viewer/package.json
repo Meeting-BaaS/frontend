@@ -6,7 +6,7 @@
     "with-env": "dotenv -e ../../.env --",
     "dev": "pnpm with-env next dev --port 3008 --turbopack",
     "build": "pnpm with-env next build",
-    "start": "pnpm with-env next start",
+    "start": "NODE_ENV=production pnpm with-env next start --port 3008",
     "lint": "biome lint .",
     "format": "biome format --write .",
     "check-types": "tsc --noEmit"
