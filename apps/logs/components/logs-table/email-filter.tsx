@@ -12,7 +12,11 @@ interface EmailFilterProps {
   placeholder?: string
 }
 
-export function EmailFilter({ value = "", onFilterChange, placeholder = "Enter email address..." }: EmailFilterProps) {
+export function EmailFilter({
+  value = "",
+  onFilterChange,
+  placeholder = "Enter email address..."
+}: EmailFilterProps) {
   const [inputValue, setInputValue] = useState(value)
 
   // Update input value when prop changes
@@ -65,14 +69,10 @@ export function EmailFilter({ value = "", onFilterChange, placeholder = "Enter e
         )}
       </div>
       {inputValue !== value && (
-        <Button
-          size="sm"
-          onClick={handleApply}
-          className="w-full"
-        >
+        <Button size="sm" onClick={handleApply} className="w-full">
           Apply Filter
         </Button>
       )}
     </div>
   )
-} 
+}

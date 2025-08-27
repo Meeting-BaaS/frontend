@@ -78,10 +78,7 @@ export const UserAvatar = ({ user, currentPath }: UserAvatarProps) => {
           <Fragment key={menuOption.title}>
             {menuOption.separator && <DropdownMenuSeparator />}
             <DropdownMenuItem asChild disabled={menuOption.href === currentPath}>
-              <Link
-                href={menuOption.href}
-                className="cursor-pointer"
-              >
+              <Link href={menuOption.href} className="cursor-pointer">
                 {menuOption.title}
               </Link>
             </DropdownMenuItem>

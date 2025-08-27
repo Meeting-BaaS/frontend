@@ -173,32 +173,30 @@ export async function fetchSystemMetrics(
     )
   }
 
-  const logsText = await logsResponse.text();
-  const lines = logsText.trim().split("\n");
+  const logsText = await logsResponse.text()
+  const lines = logsText.trim().split("\n")
 
-  let machine: SystemMetricsMachine | null = null;
-  const points: SystemMetricsPoint[] = [];
+  let machine: SystemMetricsMachine | null = null
+  const points: SystemMetricsPoint[] = []
 
   for (const line of lines) {
     if (line.trim()) {
       try {
-        const parsed = JSON.parse(line);
+        const parsed = JSON.parse(line)
         if (parsed.machine) {
-          machine = parsed.machine;
+          machine = parsed.machine
         } else if (parsed.point) {
-          points.push(parsed.point);
+          points.push(parsed.point)
         }
       } catch (error) {
-        console.warn("Failed to parse log line:", line, error);
+        console.warn("Failed to parse log line:", line, error)
       }
     }
   }
 
-  const metrics: SystemMetrics[] = machine
-    ? [{ machine, points }]
-    : [];
+  const metrics: SystemMetrics[] = machine ? [{ machine, points }] : []
 
-  return { metrics, logsUrl: logsUrlResponse.url };
+  return { metrics, logsUrl: logsUrlResponse.url }
 }
 
 export async function fetchDebugLogs(bot_uuid: string): Promise<{ text: string; logsUrl: string }> {
