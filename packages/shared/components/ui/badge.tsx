@@ -1,6 +1,6 @@
-import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
+import type * as React from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -9,21 +9,17 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "border-primary/30 bg-primary/10 text-primary",
-        secondary:
-          "border-secondary/30 bg-secondary/20 text-secondary-foreground",
+        default: "border-primary/30 bg-primary/10 text-primary",
+        secondary: "border-secondary/30 bg-secondary/20 text-secondary-foreground",
         warning:
           "border-baas-warning-500/90 bg-baas-warning-500/80 text-baas-black/80 dark:border-baas-warning-500/30 dark:bg-baas-warning-500/20 dark:text-baas-warning-500",
-        destructive:
-          "border-destructive/30 bg-destructive/20 text-destructive",
-        outline:
-          "text-foreground",
-      },
+        destructive: "border-destructive/30 bg-destructive/20 text-destructive",
+        outline: "text-foreground"
+      }
     },
     defaultVariants: {
-      variant: "default",
-    },
+      variant: "default"
+    }
   }
 )
 
@@ -32,17 +28,10 @@ function Badge({
   variant,
   asChild = false,
   ...props
-}: React.ComponentProps<"span"> &
-  VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
+}: React.ComponentProps<"span"> & VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
   const Comp = asChild ? Slot : "span"
 
-  return (
-    <Comp
-      data-slot="badge"
-      className={cn(badgeVariants({ variant }), className)}
-      {...props}
-    />
-  )
+  return <Comp data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />
 }
 
 export { Badge, badgeVariants }

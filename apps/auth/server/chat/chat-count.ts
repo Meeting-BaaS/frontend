@@ -2,24 +2,24 @@ import { Pool } from "pg"
 
 let pool: Pool | undefined
 
-if(process.env.ENABLE_AI_CHAT_INTEGRATION === "true") {
-    if (!process.env.AI_CHAT_DB) {
-        throw new Error("AI_CHAT_DB is not configured in env")
-    }
-    
-    pool = new Pool({
-        connectionString: process.env.AI_CHAT_DB
-    })
-    
-    // Graceful shutdown
-    process.on("SIGINT", () => {
-        pool?.end()
-    })
+if (process.env.ENABLE_AI_CHAT_INTEGRATION === "true") {
+  if (!process.env.AI_CHAT_DB) {
+    throw new Error("AI_CHAT_DB is not configured in env")
+  }
+
+  pool = new Pool({
+    connectionString: process.env.AI_CHAT_DB
+  })
+
+  // Graceful shutdown
+  process.on("SIGINT", () => {
+    pool?.end()
+  })
 }
 
 interface ChatInfo {
-    count: number
-    earliestChatId: string | null
+  count: number
+  earliestChatId: string | null
 }
 
 /**
@@ -31,14 +31,14 @@ interface ChatInfo {
  * @returns An object containing the count and earliest chat ID
  */
 export async function getChatInfo(userId: string): Promise<ChatInfo> {
-    if (process.env.ENABLE_AI_CHAT_INTEGRATION !== "true" || !pool) {
-        console.log("AI chat integration is disabled or pool is not initialized")
-        return {
-            count: 0,
-            earliestChatId: null
-        }
+  if (process.env.ENABLE_AI_CHAT_INTEGRATION !== "true" || !pool) {
+    console.log("AI chat integration is disabled or pool is not initialized")
+    return {
+      count: 0,
+      earliestChatId: null
     }
-    const query = `
+  }
+  const query = `
         WITH user_chats AS (
             SELECT id, title, "createdAt"
             FROM public."ai-chatbot_chat" 
@@ -50,14 +50,14 @@ export async function getChatInfo(userId: string): Promise<ChatInfo> {
         FROM user_chats
     `
 
-    try {
-        const result = await pool.query(query, [userId])
-        return {
-            count: Number.parseInt(result.rows[0].count),
-            earliestChatId: result.rows[0].id
-        }
-    } catch (error) {
-        console.error("Error getting chat count:", error)
-        throw error
+  try {
+    const result = await pool.query(query, [userId])
+    return {
+      count: Number.parseInt(result.rows[0].count, 10),
+      earliestChatId: result.rows[0].id
     }
+  } catch (error) {
+    console.error("Error getting chat count:", error)
+    throw error
+  }
 }

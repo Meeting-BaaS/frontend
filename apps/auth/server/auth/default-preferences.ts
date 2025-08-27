@@ -6,5 +6,5 @@ import { emailService } from "@/server/auth/emails-service"
  * @returns true if the preferences are saved successfully, false otherwise
  */
 export const saveDefaultPreferences = async (accountId: number) => {
-    await emailService("account/default-preferences", { accountId })
+  await emailService("account/default-preferences", { accountId })
 }

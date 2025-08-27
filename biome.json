@@ -17,7 +17,8 @@
         "noDoubleEquals": {
           "fix": "safe",
           "level": "warn"
-        }
+        },
+        "noUnknownAtRules": "off"
       },
       "style": {
         "noNonNullAssertion": "off",

@@ -9,8 +9,8 @@ import type { AnyPgColumn } from "drizzle-orm/pg-core"
  * @returns Array with first name and last name
  */
 export const splitName = (name: string) => {
-    const [first = null, ...rest] = name.trim().split(" ")
-    return [first, rest.length ? rest.join(" ") : null]
+  const [first = null, ...rest] = name.trim().split(" ")
+  return [first, rest.length ? rest.join(" ") : null]
 }
 
 /**
@@ -19,7 +19,7 @@ export const splitName = (name: string) => {
  * @returns SQL
  */
 export const lower = (column: AnyPgColumn): SQL => {
-    return sql`lower(${column})`
+  return sql`lower(${column})`
 }
 
 /**
@@ -29,34 +29,34 @@ export const lower = (column: AnyPgColumn): SQL => {
  * @param image image
  */
 export const updateUserProfile = async (name: string, email: string, image?: string) => {
-    try {
-        const [firstname, lastname] = splitName(name)
+  try {
+    const [firstname, lastname] = splitName(name)
 
-        // Fetch current user data
-        const user = await db
-            .select()
-            .from(users)
-            .where(eq(lower(users.email), email.toLowerCase()))
+    // Fetch current user data
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(lower(users.email), email.toLowerCase()))
 
-        // User doesn't exist. better-auth will handle user creation
-        if (!user.length) return
+    // User doesn't exist. better-auth will handle user creation
+    if (!user.length) return
 
-        // Check if any values have actually changed
-        const shouldUpdate = user[0].name !== name || (image && user[0].image !== image)
+    // Check if any values have actually changed
+    const shouldUpdate = user[0].name !== name || (image && user[0].image !== image)
 
-        if (!shouldUpdate) return
+    if (!shouldUpdate) return
 
-        await db
-            .update(users)
-            .set({
-                ...(image ? { image } : {}),
-                name,
-                firstname,
-                lastname,
-                updatedAt: new Date()
-            })
-            .where(eq(lower(users.email), email.toLowerCase()))
-    } catch (error) {
-        console.error("Error updating user profile", error)
-    }
+    await db
+      .update(users)
+      .set({
+        ...(image ? { image } : {}),
+        name,
+        firstname,
+        lastname,
+        updatedAt: new Date()
+      })
+      .where(eq(lower(users.email), email.toLowerCase()))
+  } catch (error) {
+    console.error("Error updating user profile", error)
+  }
 }

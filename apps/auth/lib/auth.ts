@@ -148,7 +148,9 @@ export const auth = betterAuth({
       }
     },
     microsoft: {
-      enabled: Boolean(process.env.MICROSOFT_ID && process.env.MICROSOFT_SECRET && process.env.MICROSOFT_TENANT_ID),
+      enabled: Boolean(
+        process.env.MICROSOFT_ID && process.env.MICROSOFT_SECRET && process.env.MICROSOFT_TENANT_ID
+      ),
       clientId: process.env.MICROSOFT_ID as string,
       clientSecret: process.env.MICROSOFT_SECRET as string,
       tenantId: process.env.MICROSOFT_TENANT_ID as string,

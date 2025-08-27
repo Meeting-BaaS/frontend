@@ -21,23 +21,23 @@
 }
 
 @media (pointer: coarse) {
-    .pointer-touch-opacity-100 {
-        opacity: 100%;
-    }
+  .pointer-touch-opacity-100 {
+    opacity: 100%;
+  }
 }
 
 .card-grid > *:nth-child(1) {
-    @apply border-r border-b rounded-tl-xl;
+  @apply border-r border-b rounded-tl-xl;
 }
 
 .card-grid > *:nth-child(2) {
-    @apply border-b rounded-tr-xl;
+  @apply border-b rounded-tr-xl;
 }
 
 .card-grid > *:nth-child(3) {
-    @apply border-r rounded-bl-xl;
+  @apply border-r rounded-bl-xl;
 }
 
 .card-grid > *:nth-child(4) {
-    @apply rounded-br-xl;
+  @apply rounded-br-xl;
 }

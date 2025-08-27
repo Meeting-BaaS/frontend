@@ -8,7 +8,7 @@ import { emailService } from "@/server/auth/emails-service"
  * @throws {Error} If the email service fails or environment variables are missing
  */
 export const sendVerificationEmail = async (firstName: string, email: string, url: string) => {
-    await emailService("account/verification-email", { firstName, email, url })
+  await emailService("account/verification-email", { firstName, email, url })
 }
 
 /**
@@ -19,5 +19,5 @@ export const sendVerificationEmail = async (firstName: string, email: string, ur
  * @throws {Error} If the email service fails or environment variables are missing
  */
 export const sendPasswordResetEmail = async (firstName: string, email: string, url: string) => {
-    await emailService("account/password-reset-email", { firstName, email, url })
+  await emailService("account/password-reset-email", { firstName, email, url })
 }

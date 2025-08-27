@@ -1,9 +1,11 @@
 /** biome-ignore-all lint/style/useDefaultParameterLast: TODO: We will fix all the lint issues in this file in a future PR */
+/** biome-ignore-all lint/complexity/useOptionalChain: TODO: We will fix all the lint issues in this file in a future PR */
+/** biome-ignore-all lint/suspicious/noExplicitAny: TODO: We will fix all the lint issues in this file in a future PR */
 
 import { GitHubLogo } from "@repo/shared/components/icons/github"
 import { Button } from "@repo/shared/components/ui/button"
 import { Card, CardContent } from "@repo/shared/components/ui/card"
-import { Check, Copy, Eye, EyeOff, Globe, Key } from "lucide-react"
+import { Check, Copy, Globe, Key } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import Prism from "react-syntax-highlighter/dist/esm/prism"

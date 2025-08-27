@@ -1,6 +1,9 @@
 "use client"
 
-import { cardContainerVariant, cardItemVariant } from "@repo/shared/animations/auth/auth-card-stacks"
+import {
+  cardContainerVariant,
+  cardItemVariant
+} from "@repo/shared/animations/auth/auth-card-stacks"
 import { Code } from "lucide-react"
 import { motion } from "motion/react"
 import Image from "next/image"

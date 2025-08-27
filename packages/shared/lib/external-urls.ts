@@ -14,12 +14,12 @@ const BASE_DOMAIN = process.env.NEXT_PUBLIC_BASE_DOMAIN || "meetingbaas.com"
 
 // Helper to construct environment-aware URLs
 const createUrl = (subdomain: string) => {
-    // If environment is set, apply it to the full domain (not between subdomain and domain)
-    if (environment) {
-        return `https://${subdomain}.${environment}${BASE_DOMAIN}`
-    }
-    // Otherwise, just use the subdomain directly
-    return `https://${subdomain}.${BASE_DOMAIN}`
+  // If environment is set, apply it to the full domain (not between subdomain and domain)
+  if (environment) {
+    return `https://${subdomain}.${environment}${BASE_DOMAIN}`
+  }
+  // Otherwise, just use the subdomain directly
+  return `https://${subdomain}.${BASE_DOMAIN}`
 }
 
 // Main app URL
@@ -51,7 +51,7 @@ export const DISCORD_URL = "https://discord.com/invite/dsvFgDTr6c"
 
 // Real time transcription
 export const REAL_TIME_TRANSCRIPTION_GITHUB_URL =
-    "https://github.com/Meeting-Baas/realtime-meeting-transcription"
+  "https://github.com/Meeting-Baas/realtime-meeting-transcription"
 
 // Speaking Bots
 export const SPEAKING_BOTS_DOCS_URL = `${DOCS_URL}/docs/speaking-bots`
