@@ -1,0 +1,45 @@
+{
+  "name": "@repo/shared",
+  "version": "0.0.0",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./styles.css": "./styles.css",
+    "./components/ui/*": "./components/ui/*.tsx",
+    "./components/layout/*": "./components/layout/*.tsx",
+    "./components/icons/*": "./components/icons/*.tsx",
+    "./hooks": "./hooks/*.ts",
+    "./lib/utils": "./lib/utils.ts",
+    "./lib/external-urls": "./lib/external-urls.ts",
+    "./animations/*": "./animations/*.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build:components": "tsc",
+    "check-types": "tsc --noEmit",
+    "dev:components": "tsc --watch",
+    "lint": "biome lint .",
+    "format": "biome format --write ."
+  },
+  "peerDependencies": {
+    "react": "^19"
+  },
+  "dependencies": {
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^2.5.4",
+    "@radix-ui/react-avatar": "^1.1.7",
+    "@radix-ui/react-checkbox": "^1.2.3",
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-dropdown-menu": "^2.1.12",
+    "@radix-ui/react-label": "^2.1.4",
+    "@radix-ui/react-slot": "^1.2.0",
+    "@radix-ui/react-tooltip": "^1.2.7",
+    "class-variance-authority": "^0.7.1",
+    "lucide-react": "^0.541.0"
+  },
+  "devDependencies": {}
+}

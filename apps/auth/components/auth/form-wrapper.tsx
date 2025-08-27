@@ -1,6 +1,6 @@
 "use client"
 
-import { itemVariant } from "@/animations/auth/auth-forms"
+import { itemVariant } from "@repo/shared/animations/auth/auth-forms"
 import { motion } from "motion/react"
 import Image from "next/image"
 import type { ReactNode } from "react"

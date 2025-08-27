@@ -5,7 +5,7 @@ import {
     LOGS_URL,
     SETTINGS_URL,
     USAGE_URL
-} from "@/lib/external-urls"
+} from "@repo/shared/lib/external-urls"
 
 export type MenuOption = {
     title: string

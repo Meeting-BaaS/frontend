@@ -1,17 +1,21 @@
 import { Pool } from "pg"
 
-if (!process.env.AI_CHAT_DB) {
-    throw new Error("AI_CHAT_DB is not configured in env")
+let pool: Pool | undefined
+
+if(process.env.ENABLE_AI_CHAT_INTEGRATION === "true") {
+    if (!process.env.AI_CHAT_DB) {
+        throw new Error("AI_CHAT_DB is not configured in env")
+    }
+    
+    pool = new Pool({
+        connectionString: process.env.AI_CHAT_DB
+    })
+    
+    // Graceful shutdown
+    process.on("SIGINT", () => {
+        pool?.end()
+    })
 }
-
-const pool = new Pool({
-    connectionString: process.env.AI_CHAT_DB
-})
-
-// Graceful shutdown
-process.on("SIGINT", () => {
-    pool.end()
-})
 
 interface ChatInfo {
     count: number
@@ -27,6 +31,13 @@ interface ChatInfo {
  * @returns An object containing the count and earliest chat ID
  */
 export async function getChatInfo(userId: string): Promise<ChatInfo> {
+    if (process.env.ENABLE_AI_CHAT_INTEGRATION !== "true" || !pool) {
+        console.log("AI chat integration is disabled or pool is not initialized")
+        return {
+            count: 0,
+            earliestChatId: null
+        }
+    }
     const query = `
         WITH user_chats AS (
             SELECT id, title, "createdAt"

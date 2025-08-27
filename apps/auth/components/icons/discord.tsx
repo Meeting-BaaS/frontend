@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@repo/shared/lib/utils"
 
 export const DiscordLogo = ({ className, ...props }: React.ComponentProps<"svg">) => {
     return (

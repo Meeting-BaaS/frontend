@@ -1,5 +1,5 @@
+import { Alert, AlertTitle } from "@repo/shared/components/ui/alert"
 import { AlertCircle } from "lucide-react"
-import { Alert, AlertTitle } from "@/components/ui/alert"
 import { errorDescription, genericError } from "@/lib/errors"
 
 export const CallbackError = ({ error }: { error: keyof typeof errorDescription }) => {

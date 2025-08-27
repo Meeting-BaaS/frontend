@@ -1,5 +1,5 @@
-import { generateUUID } from "@/lib/utils"
-import { AI_CHAT_URL } from "@/lib/external-urls"
+import { AI_CHAT_URL } from "@repo/shared/lib/external-urls"
+import { generateUUID } from "@repo/shared/lib/utils"
 
 const CHAT_MESSAGE =
     "Hi, I have recently signed up for Meeting BaaS. I would like to know how to get started with sending bots"
@@ -10,6 +10,10 @@ const CHAT_MESSAGE =
  * @returns The chat ID
  */
 export async function createNewChat(cookies: string) {
+    if (process.env.ENABLE_AI_CHAT_INTEGRATION !== "true") {
+        return null
+    }
+
     const chatId = generateUUID()
     const messageId = generateUUID()
 
