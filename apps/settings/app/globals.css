@@ -3,7 +3,6 @@
 @source "../../../packages/shared/**/*.{ts,tsx}"; /* Shared package components */
 @config "../tailwind.config.ts";
 
-
 @theme inline {
   --color-baas-destructive: var(--baas-destructive);
   --color-sidebar-ring: var(--sidebar-ring);

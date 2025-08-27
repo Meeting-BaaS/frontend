@@ -58,7 +58,9 @@ export function useChartConfig() {
 // Custom tooltip for charts
 interface ChartTooltipContentProps {
   label?: string
+  /** biome-ignore lint/suspicious/noExplicitAny: Payload can be any value */
   payload?: any[]
+  /** biome-ignore lint/suspicious/noExplicitAny: Value can be any type */
   formatter?: (value: any) => string
   active?: boolean
   labelFormatter?: (label: string) => string
@@ -85,6 +87,7 @@ export function ChartTooltipContent({
         </div>
       )}
       <div className="space-y-1">
+        {/** biome-ignore lint/suspicious/noExplicitAny: Payload can be any value */}
         {payload.map((item: any, index) => {
           // Get config for the current dataKey, using it for label and color
           const key = item.dataKey as string
@@ -93,6 +96,7 @@ export function ChartTooltipContent({
           const name = chartItem?.label || key
 
           return (
+            // biome-ignore lint/suspicious/noArrayIndexKey: Index is used as a key as it is the only unique value
             <div key={`item-${index}`} className="flex items-center gap-2">
               <div
                 className="h-2 w-2 rounded-full"
@@ -111,6 +115,7 @@ export function ChartTooltipContent({
   )
 }
 
+/** biome-ignore lint/suspicious/noExplicitAny: Props can be any value */
 export function ChartTooltip(props: any) {
   // This component just wraps the recharts Tooltip component
   return (
@@ -159,6 +164,7 @@ export function ChartLegendContent({ payload }: ChartLegendContentProps) {
   )
 }
 
+/** biome-ignore lint/suspicious/noExplicitAny: Props can be any value */
 export function ChartLegend(props: any) {
   return <RechartsComponents.Legend verticalAlign="top" height={36} {...props} />
 }

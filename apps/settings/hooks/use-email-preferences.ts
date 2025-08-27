@@ -1,10 +1,14 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import { useState } from "react"
 import { toast } from "sonner"
+import { getUpdatedDomainFrequency } from "@/components/email-preferences/domain-frequency"
 import {
   getEmailPreferences,
+  resendLatestEmail,
   updateEmailFrequency,
-  updateServiceFrequency,
-  resendLatestEmail
+  updateServiceFrequency
 } from "@/lib/api/email-api"
 import type {
   EmailDomain,
@@ -14,10 +18,7 @@ import type {
   MutationError,
   ResendError
 } from "@/lib/email-types"
-import { getUpdatedDomainFrequency } from "@/components/email-preferences/domain-frequency"
-import { useState } from "react"
-import dayjs from "dayjs"
-import utc from "dayjs/plugin/utc"
+
 dayjs.extend(utc)
 
 export function useEmailPreferences() {
@@ -58,7 +59,7 @@ export function useEmailPreferences() {
     onSuccess: () => {
       toast.success("Preference updated successfully")
     },
-    onError: (error: MutationError, { id }) => {
+    onError: (error: MutationError) => {
       console.error("Failed to update preference", error)
       // Revert the cache on error using the stored previous state
       queryClient.setQueryData(["email-preferences"], (old: EmailPreferences) => {
@@ -75,7 +76,11 @@ export function useEmailPreferences() {
       domain,
       frequency,
       emailTypes
-    }: { domain: EmailDomain; frequency: EmailFrequency; emailTypes: EmailType[] }) => {
+    }: {
+      domain: EmailDomain
+      frequency: EmailFrequency
+      emailTypes: EmailType[]
+    }) => {
       // Store the current state before updating
       const previousState = queryClient.getQueryData(["email-preferences"]) as EmailPreferences
 

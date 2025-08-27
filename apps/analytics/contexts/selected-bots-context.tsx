@@ -1,10 +1,10 @@
 "use client"
 
-import type { FormattedBotData } from "@/lib/types"
-import { createContext, type ReactNode, useState, useEffect, useRef } from "react"
-import { createLogsSearchParams, createLogsUrl } from "@/lib/search-params"
-import { setupPostMessageHandler } from "@/lib/post-message"
+import { createContext, type ReactNode, useState } from "react"
 import { v4 as uuidv4 } from "uuid"
+import { setupPostMessageHandler } from "@/lib/post-message"
+import { createLogsSearchParams, createLogsUrl } from "@/lib/search-params"
+import type { FormattedBotData } from "@/lib/types"
 
 interface SelectedBotsContextType {
   selectedBots: FormattedBotData[]

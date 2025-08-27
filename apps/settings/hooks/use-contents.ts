@@ -1,10 +1,9 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useEffect } from "react"
 import { toast } from "sonner"
 import { deleteContent, getContents, updateContent } from "@/lib/api/broadcast-api"
-import type { Content } from "@/lib/broadcast-types"
-import { useEffect } from "react"
+import type { Content, ContentMutationError } from "@/lib/broadcast-types"
 import type { ContentFormValues } from "@/lib/schemas/content"
-import type { ContentMutationError } from "@/lib/broadcast-types"
 
 export function useContents() {
   const queryClient = useQueryClient()
@@ -86,7 +85,7 @@ export function useContents() {
     onSuccess: () => {
       toast.success("Content deleted successfully")
     },
-    onError: (error: ContentMutationError, { id }) => {
+    onError: (error: ContentMutationError) => {
       console.error("Failed to delete content", error)
       // Revert the cache on error using the stored previous state
       queryClient.setQueryData(["contents"], (old: Content[]) => {

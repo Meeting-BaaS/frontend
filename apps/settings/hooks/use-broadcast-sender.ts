@@ -1,7 +1,7 @@
 import { useState } from "react"
-import { sendBroadcast } from "@/lib/api/broadcast-api"
-import type { Recipient, Content } from "@/lib/broadcast-types"
 import { toast } from "sonner"
+import { sendBroadcast } from "@/lib/api/broadcast-api"
+import type { Content, Recipient } from "@/lib/broadcast-types"
 import type { EmailFrequency, EmailType } from "@/lib/email-types"
 
 const BATCH_SIZE = Number(process.env.NEXT_PUBLIC_EMAIL_BATCH_SIZE) || 100
@@ -62,7 +62,8 @@ export function useBroadcastSender({
             subject
           })
           successesInBatch = batchRecipients.length
-        } catch (error) {
+        } catch (_error) {
+          console.error("Failed to send broadcast batch", _error)
           currentErrorRecipients.push(...batchRecipients)
         }
 
@@ -80,6 +81,7 @@ export function useBroadcastSender({
         errorRecipients: currentErrorRecipients
       }
     } catch (error) {
+      console.error("Failed to send broadcast", error)
       toast.error("Failed to send broadcast")
       return null
     } finally {
@@ -99,6 +101,7 @@ export function useBroadcastSender({
       toast.success("Test email sent successfully")
       return true
     } catch (error) {
+      console.error("Failed to send test email", error)
       toast.error("Failed to send test email")
       return false
     }

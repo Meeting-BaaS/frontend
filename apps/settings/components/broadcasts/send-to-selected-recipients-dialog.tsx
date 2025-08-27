@@ -261,36 +261,34 @@ export function SendToSelectedRecipientsDialog({
               </div>
             </div>
           ) : (
-            <>
-              <div className="space-y-4">
-                <p className="text-muted-foreground text-sm">
-                  Please provide the number of recipients you want to send the broadcast to. The
-                  selected content {selectedContent.length === 1 ? "block" : "blocks"} will be sent
-                  to the provided number of recipients. Click{" "}
-                  <Button
-                    variant="link"
-                    onClick={handleTestEmail}
-                    disabled={isTestEmailLoading}
-                    aria-disabled={isTestEmailLoading}
-                    aria-busy={isTestEmailLoading}
-                    className="h-auto p-0"
-                  >
-                    here {isTestEmailLoading && <Loader2 className="animate-spin" />}
-                  </Button>{" "}
-                  to send a test email to yourself.
-                </p>
+            <div className="space-y-4">
+              <p className="text-muted-foreground text-sm">
+                Please provide the number of recipients you want to send the broadcast to. The
+                selected content {selectedContent.length === 1 ? "block" : "blocks"} will be sent to
+                the provided number of recipients. Click{" "}
+                <Button
+                  variant="link"
+                  onClick={handleTestEmail}
+                  disabled={isTestEmailLoading}
+                  aria-disabled={isTestEmailLoading}
+                  aria-busy={isTestEmailLoading}
+                  className="h-auto p-0"
+                >
+                  here {isTestEmailLoading && <Loader2 className="animate-spin" />}
+                </Button>{" "}
+                to send a test email to yourself.
+              </p>
 
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(handleSend)}
-                    id="send-to-selected-recipients-form"
-                    className="space-y-4"
-                  >
-                    <RecipientFormFields csvError={csvError} csvParsing={csvParsing} />
-                  </form>
-                </Form>
-              </div>
-            </>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(handleSend)}
+                  id="send-to-selected-recipients-form"
+                  className="space-y-4"
+                >
+                  <RecipientFormFields csvError={csvError} csvParsing={csvParsing} />
+                </form>
+              </Form>
+            </div>
           )}
         </div>
 
