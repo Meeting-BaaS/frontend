@@ -29,8 +29,8 @@ export const tokenRates = [
   },
   {
     title: "BYOK Transcription",
-    rate: "Included",
-    unit: "with any plan",
+    rate: "+0.05 token",
+    unit: "per hour",
     subtitle: "(Bring Your Own Key)",
     icon: Key
   },

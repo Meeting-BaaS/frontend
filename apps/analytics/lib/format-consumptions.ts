@@ -5,7 +5,7 @@ import { secondsToHours } from "./app-utils"
 // Token conversion rates (tokens per hour)
 const RECORDING_RATE = 1.0 // 1.00 token/hour
 const TRANSCRIPTION_RATE = 0.25 // 0.25 token/hour
-const TRANSCRIPTION_BYOK_RATE = 0.1 // 0.10 token/hour
+const TRANSCRIPTION_BYOK_RATE = 0.05 // 0.05 token/hour
 const STREAMING_INPUT_RATE = 0.1 // 0.10 token/hour
 const STREAMING_OUTPUT_RATE = 0.1 // 0.10 token/hour
 
