@@ -148,7 +148,8 @@ export const auth = betterAuth({
       },
       options: {
         scope: [
-          "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events.readonly"
+          "https://www.googleapis.com/auth/calendar.readonly",
+          "https://www.googleapis.com/auth/calendar.events.readonly"
         ]
       }
     },
