@@ -145,6 +145,11 @@ export const auth = betterAuth({
       mapProfileToUser: async (profile) => {
         await updateUserProfile(profile.name, profile.email, profile.picture)
         return profile
+      },
+      options: {
+        scope: [
+          "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events.readonly"
+        ]
       }
     },
     microsoft: {
