@@ -146,10 +146,18 @@ export const auth = betterAuth({
         await updateUserProfile(profile.name, profile.email, profile.picture)
         return profile
       },
+      scope: [
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/calendar"
+      ],
+      prompt: "consent",
+      accessType: "offline",
       options: {
         scope: [
-          "https://www.googleapis.com/auth/calendar.readonly",
-          "https://www.googleapis.com/auth/calendar.events.readonly"
+          "https://www.googleapis.com/auth/userinfo.email",
+          "https://www.googleapis.com/auth/userinfo.profile",
+          "https://www.googleapis.com/auth/calendar"
         ]
       }
     },
