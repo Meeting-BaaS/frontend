@@ -136,7 +136,7 @@ The shared package contains reusable components, hooks, and utilities that are c
 - **Hooks**: Custom React hooks for common functionality
 - **Utilities**: Helper functions and utilities
 - **Animations**: Shared animation utilities
-- **Auth Utilities**: Authentication-related utilities
+- **Auth Utilities**: Authentication-related utilities using better-auth
 
 #### Adding New Shadcn Components
 
@@ -170,14 +170,14 @@ Since environment configuration is shared across certain applications, a single 
 
 For detailed information about each application, including features, tech stack, and specific setup instructions, please refer to their individual README files:
 
-| Application | Description | README |
-|-------------|-------------|---------|
-| **Auth** | Authentication system with user management | [📖 View README](apps/auth/README.md) |
-| **Analytics** | Meeting bot performance analytics | [📖 View README](apps/analytics/README.md) |
-| **Logs** | Debug logs and system metrics | [📖 View README](apps/logs/README.md) |
-| **Settings** | App configuration management | [📖 View README](apps/settings/README.md) |
-| **Pricing** | Pricing tiers and billing | [📖 View README](apps/pricing/README.md) |
-| **Viewer** | Content viewing interface | [📖 View README](apps/viewer/README.md) |
+| Application   | Description                                | README                                     |
+| ------------- | ------------------------------------------ | ------------------------------------------ |
+| **Auth**      | Authentication system with user management | [📖 View README](apps/auth/README.md)      |
+| **Analytics** | Meeting bot performance analytics          | [📖 View README](apps/analytics/README.md) |
+| **Logs**      | Debug logs and system metrics              | [📖 View README](apps/logs/README.md)      |
+| **Settings**  | App configuration management               | [📖 View README](apps/settings/README.md)  |
+| **Pricing**   | Pricing tiers and billing                  | [📖 View README](apps/pricing/README.md)   |
+| **Viewer**    | Content viewing interface                  | [📖 View README](apps/viewer/README.md)    |
 
 ## 🚀 Deployment
 
@@ -203,7 +203,7 @@ pnpm start:app settings    # Starts settings app on port 3004
 pnpm build:app pricing     # Builds pricing app
 pnpm start:app pricing     # Starts pricing app on port 3005
 
-pnpm build:app analytics   # Builds analytics app  
+pnpm build:app analytics   # Builds analytics app
 pnpm start:app analytics   # Starts analytics app on port 3007
 
 pnpm build:app viewer      # Builds viewer app
