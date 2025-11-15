@@ -179,6 +179,7 @@ export const auth = betterAuth({
         "profile",
         "email",
         "offline_access",
+        "https://graph.microsoft.com/User.Read",
         "https://graph.microsoft.com/Calendars.Read"
       ],
       prompt: "consent",
@@ -188,6 +189,7 @@ export const auth = betterAuth({
           "profile",
           "email",
           "offline_access",
+          "https://graph.microsoft.com/User.Read",
           "https://graph.microsoft.com/Calendars.Read"
         ]
       }
