@@ -173,6 +173,23 @@ export const auth = betterAuth({
       mapProfileToUser: async (profile) => {
         await updateUserProfile(profile.name, profile.email, profile.picture)
         return profile
+      },
+      scope: [
+        "openid",
+        "profile",
+        "email",
+        "offline_access",
+        "https://graph.microsoft.com/Calendars.Read"
+      ],
+      prompt: "consent",
+      options: {
+        scope: [
+          "openid",
+          "profile",
+          "email",
+          "offline_access",
+          "https://graph.microsoft.com/Calendars.Read"
+        ]
       }
     },
     zoom: {
