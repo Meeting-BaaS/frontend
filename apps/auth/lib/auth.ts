@@ -167,7 +167,7 @@ export const auth = betterAuth({
       ),
       clientId: process.env.MICROSOFT_ID as string,
       clientSecret: process.env.MICROSOFT_SECRET as string,
-      // tenantId: process.env.MICROSOFT_TENANT_ID as string,
+      tenantId: process.env.MICROSOFT_TENANT_ID as string,
       requireSelectAccount: true,
       disableImplicitSignUp: DISABLE_IMPLICIT_SIGN_UP,
       mapProfileToUser: async (profile) => {
