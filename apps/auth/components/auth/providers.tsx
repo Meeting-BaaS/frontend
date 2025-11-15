@@ -1,6 +1,6 @@
-// import { MicrosoftLogo } from "@/components/icons/microsoft"
 import { GitHubLogo } from "@repo/shared/components/icons/github"
 import { GoogleLogo } from "@/components/icons/google"
+import { MicrosoftLogo } from "@/components/icons/microsoft"
 // import { GitLabLogo } from "@/components/icons/gitlab"
 // import { ZoomLogo } from "@/components/icons/zoom"
 
@@ -16,12 +16,12 @@ interface Provider {
 
 // Temporarily commenting provider buttons until they are configured in higher environments
 export const providers: Provider[] = [
-  // {
-  //     name: "microsoft",
-  //     title: "Microsoft",
-  //     logo: <MicrosoftLogo />,
-  //     className: "hover:bg-microsoft-grey"
-  // },
+  {
+    name: "microsoft",
+    title: "Microsoft",
+    logo: <MicrosoftLogo />,
+    className: "hover:bg-microsoft-grey"
+  },
   {
     name: "google",
     title: "Google",
