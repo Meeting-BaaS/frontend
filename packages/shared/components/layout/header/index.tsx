@@ -36,8 +36,8 @@ export default function Header({ user, currentPath, headerClassName }: HeaderPro
               className="h-5 w-5"
             />
             <span className="font-bold text-md">Meeting BaaS</span>
+            <IntroducingV2Button />
           </div>
-          <IntroducingV2Button />
         </Link>
         <div className="flex items-center gap-3">
           <div className="flex gap-1">
