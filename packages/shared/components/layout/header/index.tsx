@@ -1,14 +1,14 @@
 import { getAuthAppUrl } from "@repo/shared/auth/auth-app-url"
 import type { User } from "@repo/shared/auth/types"
 import { GitHubLogo } from "@repo/shared/components/icons/github"
+import { IntroducingV2Button } from "@repo/shared/components/layout/header/introducing-v2-button"
 import { ThemeToggle } from "@repo/shared/components/layout/header/theme-toggle"
 import { UserAvatar } from "@repo/shared/components/layout/header/user-avatar"
 import { Button } from "@repo/shared/components/ui/button"
 import { GITHUB_REPO_URL } from "@repo/shared/lib/external-urls"
+import { cn } from "@repo/shared/lib/utils"
 import Image from "next/image"
 import Link from "next/link"
-import { IntroducingV2Button } from "@/components/layout/header/introducing-v2-button"
-import { cn } from "@/lib/utils"
 
 interface HeaderProps {
   user: User
