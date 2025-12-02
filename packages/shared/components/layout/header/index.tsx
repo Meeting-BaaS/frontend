@@ -7,6 +7,7 @@ import { Button } from "@repo/shared/components/ui/button"
 import { GITHUB_REPO_URL } from "@repo/shared/lib/external-urls"
 import Image from "next/image"
 import Link from "next/link"
+import { IntroducingV2Button } from "@/components/layout/header/introducing-v2-button"
 import { cn } from "@/lib/utils"
 
 interface HeaderProps {
@@ -36,6 +37,7 @@ export default function Header({ user, currentPath, headerClassName }: HeaderPro
             />
             <span className="font-bold text-md">Meeting BaaS</span>
           </div>
+          <IntroducingV2Button />
         </Link>
         <div className="flex items-center gap-3">
           <div className="flex gap-1">

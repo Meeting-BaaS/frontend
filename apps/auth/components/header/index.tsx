@@ -1,6 +1,7 @@
 "use client"
 
 import { GitHubLogo } from "@repo/shared/components/icons/github"
+import { IntroducingV2Button } from "@repo/shared/components/layout/header/introducing-v2-button"
 import { Button } from "@repo/shared/components/ui/button"
 import { GITHUB_REPO_URL } from "@repo/shared/lib/external-urls"
 import Image from "next/image"
@@ -34,6 +35,7 @@ export default function Header({ initialSession }: { initialSession: SessionObje
             className="h-5 w-5"
           />
           <span className="font-bold text-md">Meeting BaaS</span>
+          <IntroducingV2Button />
         </div>
         <div className="flex items-center gap-3">
           <div className="flex gap-1">
