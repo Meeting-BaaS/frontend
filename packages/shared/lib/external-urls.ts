@@ -66,6 +66,10 @@ export const TRANSCRIPT_SEEKER_GITHUB_URL = "https://github.com/Meeting-Baas/tra
 // Github
 export const GITHUB_REPO_URL = "https://github.com/Meeting-Baas/frontend"
 
+export const V2_DASHBOARD_URL = createUrl("dashboard")
+export const V2_DOCS_URL = `${DOCS_URL}/api-v2`
+export const v2_INTRODUCTION_URL = "https://meetingbaas.com/en/api/introducing-meeting-baas-v2"
+
 export const CONSUMPTION_URL = USAGE_URL
 
 export const VIEWER_URL = createUrl("viewer")

@@ -95,6 +95,57 @@
   }
 }
 
+@keyframes rotate {
+  to {
+    --angle: 360deg;
+  }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+
+@layer utilities {
+  .rainbow-border {
+    position: relative;
+    z-index: 0;
+    background: linear-gradient(var(--background), var(--background)) padding-box, linear-gradient(
+          var(--angle),
+          #02fcef70 0%,
+          #ffb52b70 50%,
+          #a02bfe70 100%
+        ) border-box;
+    animation: 9s rotate linear infinite;
+  }
+  
+  .rainbow-border::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: -1;
+    top: -10px;
+
+    /* shadow area */
+    padding: 24px; /* outward size */
+    background: linear-gradient(
+      var(--angle),
+      #02fcef40 0%,
+      #ffb52b40 50%,
+      #a02bfe40 100%
+    );
+
+    /* blur to turn it into a shadow */
+    filter: blur(12px);
+
+    animation: rotate 9s linear infinite;
+    pointer-events: none;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   @supports (view-transition-name: none) {
     ::view-transition-new(theme-transition) {
