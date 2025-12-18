@@ -47,6 +47,7 @@ export function Viewer({ meetingData, isLoadingTranscripts = false }: ViewerProp
             currentTime={currentTime}
             onTimeChange={handleTimeChange}
             isLoading={isLoadingTranscripts}
+            meetingData={meetingData}
           />
         </div>
       </div>

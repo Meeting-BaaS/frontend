@@ -61,8 +61,20 @@ export type BotData = {
   transcripts?: Transcript[]
 }
 
+export type NetworkSpeakerMetadata = {
+  type: "metadata"
+  id: number
+  name: string
+  fullName: string
+  displayName: string
+  profilePicture: string
+}
+
 export type MeetingDataResponse = {
   bot_data: BotData
   mp4: string
   duration: number
+  speaker_diarization_file?: string
+  speaker_diarization_file_network?: string
+  speaker_metadata_file_network?: string
 }
