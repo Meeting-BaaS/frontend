@@ -77,17 +77,19 @@ export function useReattributedTranscripts({
             const parsed = JSON.parse(line)
 
             // Handle both array format [{}] and object format {}
-            const data = Array.isArray(parsed) ? parsed[0] : parsed
+            const items = Array.isArray(parsed) ? parsed : [parsed]
 
-            // Check if this is the start time event
-            if (data?.type === "start_time" && data.meetingStartTime) {
-              meetingStartTimeMs = data.meetingStartTime
-              const startTime = data.meetingStartTime
-              console.log("[Network Re-attribution] Meeting start time:", startTime, new Date(startTime).toISOString())
-            } else if (data?.name && data.timestamp !== undefined && data.isSpeaking !== undefined) {
-              // This is a speaker event
-              console.log("[Network Re-attribution] Found speaker event:", data.name, data.isSpeaking, "at", data.timestamp)
-              events.push(data as NetworkSpeakerEvent)
+            // Process all items in the array
+            for (const data of items) {
+              // Check if this is the start time event
+              if (data?.type === "start_time" && data.meetingStartTime) {
+                meetingStartTimeMs = data.meetingStartTime
+                const startTime = data.meetingStartTime
+                console.log("[Network Re-attribution] Meeting start time:", startTime, new Date(startTime).toISOString())
+              } else if (data?.name && data.timestamp !== undefined && data.isSpeaking !== undefined) {
+                // This is a speaker event - add it (we'll parse segments later)
+                events.push(data as NetworkSpeakerEvent)
+              }
             }
           } catch (e) {
             console.warn("Failed to parse network event line:", e)
