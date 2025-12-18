@@ -204,7 +204,6 @@ export default function TranscriptViewer({
             disabled={isLoadingReattribution || isLoadingMetadata}
             className="text-xs flex-shrink-0"
           >
-            {(isLoadingReattribution || isLoadingMetadata) && <Loader2 className="h-3 w-3 mr-1 animate-spin" />}
             Compare Network
           </Button>
         )}
@@ -222,7 +221,7 @@ export default function TranscriptViewer({
       )}
 
       {!isAutoScrolling && (
-        <div className="-mt-9 sticky top-5 right-0 left-0 z-10 flex w-full justify-center">
+        <div className="sticky top-0 right-0 left-0 z-10 flex w-full justify-center mb-2">
           <Button
             variant="secondary"
             onClick={() => setIsAutoScrolling(true)}
