@@ -106,12 +106,42 @@ export function useReattributedTranscripts({
         const segments = parseNetworkSegments(events)
         console.log("[Network Re-attribution] Parsed segments:", segments.length)
         console.log("[Network Re-attribution] First 3 segments:", segments.slice(0, 3))
+
+        // Analyze network segment coverage
+        if (segments.length > 0) {
+          const earliestSegment = Math.min(...segments.map(s => s.startMs))
+          const latestSegment = Math.max(...segments.map(s => s.endMs))
+          const segmentRangeSeconds = (latestSegment - earliestSegment) / 1000
+          const earliestRelativeSeconds = (earliestSegment - meetingStartTimeMs) / 1000
+          const latestRelativeSeconds = (latestSegment - meetingStartTimeMs) / 1000
+          console.log("[Network Re-attribution] Network segment range:", {
+            earliest: new Date(earliestSegment).toISOString(),
+            latest: new Date(latestSegment).toISOString(),
+            earliestRelativeSeconds: earliestRelativeSeconds.toFixed(2) + "s",
+            latestRelativeSeconds: latestRelativeSeconds.toFixed(2) + "s",
+            durationSeconds: segmentRangeSeconds.toFixed(2)
+          })
+        }
+
         setNetworkSegments(segments)
 
         // Flatten all payload words
         const allWords = payloadTranscripts.flatMap((t) => t.words)
         console.log("[Network Re-attribution] Total payload words:", allWords.length)
-        console.log("[Network Re-attribution] First word time:", allWords[0]?.start_time, "seconds")
+
+        // Analyze payload word time range
+        if (allWords.length > 0) {
+          const firstWord = allWords[0]
+          const lastWord = allWords[allWords.length - 1]
+          const firstWordAbsoluteMs = payloadTimeToAbsolute(firstWord.start_time, meetingStartTimeMs)
+          const lastWordAbsoluteMs = payloadTimeToAbsolute(lastWord.end_time, meetingStartTimeMs)
+          console.log("[Network Re-attribution] Payload word range:", {
+            firstWordTime: firstWord.start_time.toFixed(2) + "s",
+            lastWordTime: lastWord.end_time.toFixed(2) + "s",
+            firstWordAbsolute: new Date(firstWordAbsoluteMs).toISOString(),
+            lastWordAbsolute: new Date(lastWordAbsoluteMs).toISOString(),
+          })
+        }
 
         // Track which words have been matched to network segments
         const matchedWordIds = new Set<number>()
@@ -179,6 +209,44 @@ export function useReattributedTranscripts({
         const unmatchedWords = allWords.filter(w => !matchedWordIds.has(w.id))
         if (unmatchedWords.length > 0) {
           console.log("[Network Re-attribution] Adding unmatched words:", unmatchedWords.length)
+
+          // Show first 5 unmatched words with their times to help debug
+          console.log("[Network Re-attribution] First 5 unmatched words:", unmatchedWords.slice(0, 5).map(w => ({
+            text: w.text,
+            start_time: w.start_time.toFixed(2) + "s",
+            absoluteMs: payloadTimeToAbsolute(w.start_time, meetingStartTimeMs),
+            absoluteTime: new Date(payloadTimeToAbsolute(w.start_time, meetingStartTimeMs)).toISOString()
+          })))
+
+          // Check if unmatched words fall into gaps between network segments
+          // Sort segments by start time to find gaps
+          const sortedSegments = [...segments].sort((a, b) => a.startMs - b.startMs)
+          const gaps: Array<{ startMs: number; endMs: number; durationSeconds: number }> = []
+
+          for (let i = 0; i < sortedSegments.length - 1; i++) {
+            const currentEnd = sortedSegments[i].endMs
+            const nextStart = sortedSegments[i + 1].startMs
+            const gapMs = nextStart - currentEnd
+
+            if (gapMs > 100) { // Only count gaps > 100ms
+              gaps.push({
+                startMs: currentEnd,
+                endMs: nextStart,
+                durationSeconds: gapMs / 1000
+              })
+            }
+          }
+
+          if (gaps.length > 0) {
+            console.log("[Network Re-attribution] Found", gaps.length, "gaps in network segments (>100ms)")
+            console.log("[Network Re-attribution] First 5 gaps:", gaps.slice(0, 5).map(g => ({
+              start: new Date(g.startMs).toISOString(),
+              end: new Date(g.endMs).toISOString(),
+              durationSeconds: g.durationSeconds.toFixed(2)
+            })))
+          } else {
+            console.log("[Network Re-attribution] No significant gaps found between network segments")
+          }
 
           // Group unmatched words by original transcript
           for (const transcript of payloadTranscripts) {
