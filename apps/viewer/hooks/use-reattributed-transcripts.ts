@@ -168,9 +168,33 @@ export function useReattributedTranscripts({
           })
         }
 
-        console.log("[Network Re-attribution] Final reattributed transcripts:", reattributedTranscripts.length)
+        console.log("[Network Re-attribution] Final reattributed transcripts (before merging):", reattributedTranscripts.length)
+
+        // Merge consecutive segments from the same speaker (max ~1000 words per segment)
+        const MAX_WORDS_PER_SEGMENT = 1000
+        const mergedTranscripts: ReattributedTranscript[] = []
+
+        for (const transcript of reattributedTranscripts) {
+          const lastMerged = mergedTranscripts[mergedTranscripts.length - 1]
+
+          // Check if we can merge with the previous segment
+          const canMerge = lastMerged &&
+                          lastMerged.speaker === transcript.speaker &&
+                          lastMerged.words.length + transcript.words.length <= MAX_WORDS_PER_SEGMENT
+
+          if (canMerge) {
+            // Merge with previous segment
+            lastMerged.words.push(...transcript.words)
+            console.log(`[Network Re-attribution] Merged segment into previous, now ${lastMerged.words.length} words`)
+          } else {
+            // Add as new segment
+            mergedTranscripts.push(transcript)
+          }
+        }
+
+        console.log("[Network Re-attribution] Final merged transcripts:", mergedTranscripts.length)
         console.log("[Network Re-attribution] Setting transcripts...")
-        setTranscripts(reattributedTranscripts)
+        setTranscripts(mergedTranscripts)
       } catch (err) {
         console.error("Error fetching and reattributing transcripts:", err)
         setError(
