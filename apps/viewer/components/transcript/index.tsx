@@ -56,6 +56,13 @@ export default function TranscriptViewer({
     ? reattributedTranscripts
     : transcripts
 
+  console.log("[Transcript Viewer] Render:", {
+    showNetworkComparison,
+    isLoadingReattribution,
+    displayTranscriptsCount: displayTranscripts.length,
+    hasNetworkMetadata: networkMetadata.size > 0,
+  })
+
   // Find the active word and transcript based on current time
   useEffect(() => {
     let foundWord: Word | null = null

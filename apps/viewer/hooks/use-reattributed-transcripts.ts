@@ -79,7 +79,8 @@ export function useReattributedTranscripts({
             // Check if this is the start time event
             if (parsed.type === "start_time" && parsed.meetingStartTime) {
               meetingStartTimeMs = parsed.meetingStartTime
-              console.log("[Network Re-attribution] Meeting start time:", new Date(meetingStartTimeMs).toISOString())
+              const startTime = parsed.meetingStartTime
+              console.log("[Network Re-attribution] Meeting start time:", startTime, new Date(startTime).toISOString())
             } else if (parsed.name && parsed.timestamp !== undefined && parsed.isSpeaking !== undefined) {
               // This is a speaker event
               events.push(parsed as NetworkSpeakerEvent)
@@ -103,6 +104,8 @@ export function useReattributedTranscripts({
 
         // Flatten all payload words
         const allWords = payloadTranscripts.flatMap((t) => t.words)
+        console.log("[Network Re-attribution] Total payload words:", allWords.length)
+        console.log("[Network Re-attribution] First word time:", allWords[0]?.start_time, "seconds")
 
         // Group words by network segments
         const reattributedTranscripts: ReattributedTranscript[] = []
@@ -135,6 +138,7 @@ export function useReattributedTranscripts({
 
           // Skip empty segments
           if (segmentWords.length === 0) {
+            console.log(`[Network Re-attribution] Segment ${index} is empty, skipping`)
             continue
           }
 
@@ -143,6 +147,8 @@ export function useReattributedTranscripts({
           const segmentEndSeconds = (segment.endMs - meetingStartTimeMs) / 1000
 
           const hasMismatch = segmentWords.some((w) => w.speakerMismatch)
+
+          console.log(`[Network Re-attribution] Segment ${index}: ${segment.speaker}, ${segmentWords.length} words, start: ${segmentStartSeconds.toFixed(2)}s`)
 
           reattributedTranscripts.push({
             id: index,
@@ -158,6 +164,8 @@ export function useReattributedTranscripts({
           })
         }
 
+        console.log("[Network Re-attribution] Final reattributed transcripts:", reattributedTranscripts.length)
+        console.log("[Network Re-attribution] Setting transcripts...")
         setTranscripts(reattributedTranscripts)
       } catch (err) {
         console.error("Error fetching and reattributing transcripts:", err)
