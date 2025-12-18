@@ -250,7 +250,7 @@ export default function TranscriptViewer({
               className={`my-4 ${hasMismatch ? "border-l-2 border-yellow-500 pl-2" : ""}`}
             >
               <div className="mb-0.5 flex items-center gap-3 text-muted-foreground">
-                {speakerInfo.profilePicture && (
+                {showNetworkComparison && speakerInfo.profilePicture && (
                   <Avatar className="h-6 w-6">
                     <AvatarImage src={speakerInfo.profilePicture} alt={speakerInfo.fullName} />
                     <AvatarFallback className="text-xs">

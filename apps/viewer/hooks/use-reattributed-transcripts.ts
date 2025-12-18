@@ -91,59 +91,62 @@ export function useReattributedTranscripts({
         const segments = parseNetworkSegments(events)
         setNetworkSegments(segments)
 
-        // Re-attribute payload words with network speakers
-        const reattributedTranscripts: ReattributedTranscript[] = payloadTranscripts.map(
-          (transcript) => {
-            const reattributedWords: ReattributedWord[] = transcript.words.map((word) => {
-              // Convert payload word time to absolute timestamp
-              const absoluteTimeMs = payloadTimeToAbsolute(word.start_time, meetingStartTimeMs)
+        // Flatten all payload words
+        const allWords = payloadTranscripts.flatMap((t) => t.words)
 
-              // Find network speaker at this time
-              const networkSpeaker = findSpeakerAtTime(absoluteTimeMs, segments)
+        // Group words by network segments
+        const reattributedTranscripts: ReattributedTranscript[] = []
 
-              const reattributedWord: ReattributedWord = {
+        for (let index = 0; index < segments.length; index++) {
+          const segment = segments[index]
+
+          // Find all words that fall within this network segment
+          const segmentWords: ReattributedWord[] = []
+
+          for (const word of allWords) {
+            const absoluteTimeMs = payloadTimeToAbsolute(word.start_time, meetingStartTimeMs)
+
+            // Check if word falls within this segment
+            if (absoluteTimeMs >= segment.startMs && absoluteTimeMs <= segment.endMs) {
+              // Find original payload speaker for this word
+              const originalTranscript = payloadTranscripts.find((t) =>
+                t.words.some((w) => w.id === word.id)
+              )
+
+              segmentWords.push({
                 ...word,
-                networkSpeaker: networkSpeaker?.speaker,
-                networkSpeakerId: networkSpeaker?.speakerId,
+                networkSpeaker: segment.speaker,
+                networkSpeakerId: segment.speakerId,
                 speakerMismatch:
-                  networkSpeaker !== null &&
-                  networkSpeaker.speaker !== transcript.speaker,
-              }
-
-              return reattributedWord
-            })
-
-            // Determine network speaker for the transcript segment
-            // Use the most common network speaker among the words
-            const networkSpeakerCounts = new Map<string, number>()
-            for (const word of reattributedWords) {
-              if (word.networkSpeaker) {
-                networkSpeakerCounts.set(
-                  word.networkSpeaker,
-                  (networkSpeakerCounts.get(word.networkSpeaker) || 0) + 1
-                )
-              }
-            }
-
-            let dominantNetworkSpeaker: string | undefined
-            let maxCount = 0
-            for (const [speaker, count] of networkSpeakerCounts) {
-              if (count > maxCount) {
-                dominantNetworkSpeaker = speaker
-                maxCount = count
-              }
-            }
-
-            const hasMismatch = reattributedWords.some((w) => w.speakerMismatch)
-
-            return {
-              ...transcript,
-              words: reattributedWords,
-              networkSpeaker: dominantNetworkSpeaker,
-              speakerMismatch: hasMismatch,
+                  originalTranscript?.speaker !== segment.speaker,
+              })
             }
           }
-        )
+
+          // Skip empty segments
+          if (segmentWords.length === 0) {
+            continue
+          }
+
+          // Convert network segment timestamps to relative seconds
+          const segmentStartSeconds = (segment.startMs - meetingStartTimeMs) / 1000
+          const segmentEndSeconds = (segment.endMs - meetingStartTimeMs) / 1000
+
+          const hasMismatch = segmentWords.some((w) => w.speakerMismatch)
+
+          reattributedTranscripts.push({
+            id: index,
+            speaker: segment.speaker,
+            bot_id: payloadTranscripts[0]?.bot_id || 0,
+            start_time: segmentStartSeconds,
+            end_time: null,
+            words: segmentWords,
+            user_id: null,
+            lang: null,
+            networkSpeaker: segment.speaker,
+            speakerMismatch: hasMismatch,
+          })
+        }
 
         setTranscripts(reattributedTranscripts)
       } catch (err) {
