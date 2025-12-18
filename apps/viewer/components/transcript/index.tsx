@@ -194,7 +194,7 @@ export default function TranscriptViewer({
     >
       <div className="flex items-center justify-between gap-2 my-2 flex-wrap">
         <h3 className="font-bold md:mt-0 md:text-lg flex-shrink-0">
-          Transcript {showNetworkComparison && "(Network Comparison)"}
+          Transcript {showNetworkComparison && "(Network)"}
         </h3>
         {hasNetworkDiarization && (
           <Button
