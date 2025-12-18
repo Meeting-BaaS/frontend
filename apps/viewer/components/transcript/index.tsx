@@ -118,7 +118,8 @@ export default function TranscriptViewer({
       }
 
       // If speaker is "unknown" and we have metadata, try to infer
-      if (isUnknownSpeaker) {
+      // ONLY in network comparison mode
+      if (isUnknownSpeaker && showNetworkComparison) {
         // If there's only one person in metadata, use that
         if (networkMetadata.size === 1) {
           const [meta] = networkMetadata.values()
@@ -191,8 +192,8 @@ export default function TranscriptViewer({
       id="transcript-container"
       className="relative mx-4 h-full max-h-[85svh] overflow-y-auto md:mt-6"
     >
-      <div className="flex items-center justify-between my-2">
-        <h3 className="font-bold md:mt-0 md:text-lg">
+      <div className="flex items-center justify-between gap-2 my-2 flex-wrap">
+        <h3 className="font-bold md:mt-0 md:text-lg flex-shrink-0">
           Transcript {showNetworkComparison && "(Network Comparison)"}
         </h3>
         {hasNetworkDiarization && (
@@ -201,7 +202,7 @@ export default function TranscriptViewer({
             size="sm"
             onClick={() => setShowNetworkComparison(!showNetworkComparison)}
             disabled={isLoadingReattribution || isLoadingMetadata}
-            className="text-xs"
+            className="text-xs flex-shrink-0"
           >
             {(isLoadingReattribution || isLoadingMetadata) && <Loader2 className="h-3 w-3 mr-1 animate-spin" />}
             Compare Network
