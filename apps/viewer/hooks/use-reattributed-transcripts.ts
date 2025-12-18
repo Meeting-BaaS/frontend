@@ -149,17 +149,73 @@ export function useReattributedTranscripts({
         // Group words by network segments
         const reattributedTranscripts: ReattributedTranscript[] = []
 
+        // Add tolerance buffer to catch words in gaps between segments
+        // Network detection can have small gaps during natural pauses
+        const TOLERANCE_MS = 500
+
+        // First pass: assign each word to the closest matching segment
+        // This prevents double-counting when tolerance buffers overlap
+        const wordToSegmentMap = new Map<number, number>() // word.id -> segment index
+        const wordDistances: number[] = [] // Track distances for statistics
+
+        for (const word of allWords) {
+          const absoluteTimeMs = payloadTimeToAbsolute(word.start_time, meetingStartTimeMs)
+
+          let closestSegmentIndex = -1
+          let minDistance = Number.POSITIVE_INFINITY
+
+          for (let index = 0; index < segments.length; index++) {
+            const segment = segments[index]
+
+            // Check if word falls within this segment (with tolerance buffer)
+            if (absoluteTimeMs >= (segment.startMs - TOLERANCE_MS) &&
+                absoluteTimeMs <= (segment.endMs + TOLERANCE_MS)) {
+
+              // Calculate distance to segment center
+              const segmentCenter = (segment.startMs + segment.endMs) / 2
+              const distance = Math.abs(absoluteTimeMs - segmentCenter)
+
+              if (distance < minDistance) {
+                minDistance = distance
+                closestSegmentIndex = index
+              }
+            }
+          }
+
+          if (closestSegmentIndex >= 0) {
+            wordToSegmentMap.set(word.id, closestSegmentIndex)
+            matchedWordIds.add(word.id)
+            wordDistances.push(minDistance)
+          }
+        }
+
+        // Calculate statistics
+        const matchedCount = matchedWordIds.size
+        const totalCount = allWords.length
+        const unmatchedCount = totalCount - matchedCount
+        const matchRatio = (matchedCount / totalCount * 100).toFixed(2)
+        const lostRatio = (unmatchedCount / totalCount * 100).toFixed(2)
+        const avgDistance = wordDistances.length > 0
+          ? (wordDistances.reduce((sum, d) => sum + d, 0) / wordDistances.length)
+          : 0
+
+        console.log("[Network Re-attribution] ========== MATCHING STATISTICS ==========")
+        console.log("[Network Re-attribution] Total words:", totalCount)
+        console.log("[Network Re-attribution] Matched words:", matchedCount, `(${matchRatio}%)`)
+        console.log("[Network Re-attribution] Lost words:", unmatchedCount, `(${lostRatio}%)`)
+        console.log("[Network Re-attribution] Average distance to segment center:", (avgDistance / 1000).toFixed(3), "seconds")
+        console.log("[Network Re-attribution] Tolerance buffer used:", TOLERANCE_MS, "ms")
+        console.log("[Network Re-attribution] ==========================================")
+
+        // Second pass: group words by their assigned segments
         for (let index = 0; index < segments.length; index++) {
           const segment = segments[index]
 
-          // Find all words that fall within this network segment
+          // Find all words assigned to this segment
           const segmentWords: ReattributedWord[] = []
 
           for (const word of allWords) {
-            const absoluteTimeMs = payloadTimeToAbsolute(word.start_time, meetingStartTimeMs)
-
-            // Check if word falls within this segment
-            if (absoluteTimeMs >= segment.startMs && absoluteTimeMs <= segment.endMs) {
+            if (wordToSegmentMap.get(word.id) === index) {
               // Find original payload speaker for this word
               const originalTranscript = payloadTranscripts.find((t) =>
                 t.words.some((w) => w.id === word.id)
@@ -172,9 +228,11 @@ export function useReattributedTranscripts({
                 speakerMismatch:
                   originalTranscript?.speaker !== segment.speaker,
               })
-              matchedWordIds.add(word.id)
             }
           }
+
+          // Sort words by start_time to ensure chronological order
+          segmentWords.sort((a, b) => a.start_time - b.start_time)
 
           // Skip empty segments
           if (segmentWords.length === 0) {
