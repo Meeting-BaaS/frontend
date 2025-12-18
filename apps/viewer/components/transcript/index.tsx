@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react"
 import { scroller } from "react-scroll"
 import HighlightedWord from "@/components/transcript/highlighted-word"
 import { useNetworkSpeakerMetadata } from "@/hooks/use-network-speaker-metadata"
+import { useNetworkTranscripts } from "@/hooks/use-network-transcripts"
 import type { MeetingDataResponse, Transcript, Word } from "@/types/meeting-data"
 
 dayjs.extend(duration)
@@ -32,19 +33,29 @@ export default function TranscriptViewer({
   const [activeWordId, setActiveWordId] = useState<number | null>(null)
   const [activeTranscriptId, setActiveTranscriptId] = useState<number | null>(null)
   const [isAutoScrolling, setIsAutoScrolling] = useState(true)
-  const [useNetworkMetadata, setUseNetworkMetadata] = useState(false)
+  const [useNetworkDiarization, setUseNetworkDiarization] = useState(false)
+
+  const { transcripts: networkTranscripts, isLoading: isLoadingNetwork } = useNetworkTranscripts({
+    diarizationUrl: meetingData?.speaker_diarization_file_network,
+    enabled: useNetworkDiarization,
+  })
 
   const { metadata: networkMetadata, isLoading: isLoadingMetadata } = useNetworkSpeakerMetadata({
     metadataUrl: meetingData?.speaker_metadata_file_network,
-    enabled: useNetworkMetadata,
+    enabled: useNetworkDiarization,
   })
+
+  // Use network transcripts when toggle is ON and data is loaded, otherwise use payload transcripts
+  const displayTranscripts = useNetworkDiarization && networkTranscripts.length > 0
+    ? networkTranscripts
+    : transcripts
 
   // Find the active word and transcript based on current time
   useEffect(() => {
     let foundWord: Word | null = null
     let foundTranscript: Transcript | null = null
 
-    for (const transcript of transcripts) {
+    for (const transcript of displayTranscripts) {
       if (currentTime >= transcript.start_time) {
         for (const word of transcript.words) {
           if (currentTime >= word.start_time && currentTime <= word.end_time) {
@@ -61,7 +72,7 @@ export default function TranscriptViewer({
       setActiveWordId(foundWord.id)
       setActiveTranscriptId(foundTranscript?.id ?? null)
     }
-  }, [currentTime, transcripts])
+  }, [currentTime, displayTranscripts])
 
   // Scroll to active transcript
   useEffect(() => {
@@ -81,11 +92,7 @@ export default function TranscriptViewer({
   }
 
   const getSpeakerInfo = (speakerName: string) => {
-    if (useNetworkMetadata && networkMetadata.size > 0) {
-      // Try to find metadata by matching name or using first metadata entry
-      // Since we may have only one speaker, we can use the first entry
-      const firstMetadata = Array.from(networkMetadata.values())[0]
-
+    if (useNetworkDiarization && networkMetadata.size > 0) {
       // Check if any metadata matches the speaker name
       for (const meta of networkMetadata.values()) {
         if (meta.name === speakerName || meta.fullName === speakerName) {
@@ -96,17 +103,9 @@ export default function TranscriptViewer({
           }
         }
       }
-
-      // Fallback to first metadata if no exact match
-      if (firstMetadata) {
-        return {
-          displayName: firstMetadata.displayName,
-          fullName: firstMetadata.fullName,
-          profilePicture: firstMetadata.profilePicture,
-        }
-      }
     }
 
+    // Fallback to original speaker name if no metadata match or toggle is off
     return {
       displayName: speakerName,
       fullName: speakerName,
@@ -114,7 +113,7 @@ export default function TranscriptViewer({
     }
   }
 
-  const hasNetworkMetadata = !!meetingData?.speaker_metadata_file_network
+  const hasNetworkDiarization = !!meetingData?.speaker_diarization_file_network
 
   return (
     <div
@@ -123,17 +122,19 @@ export default function TranscriptViewer({
       className="relative mx-4 h-full max-h-[85svh] overflow-y-auto md:mt-6"
     >
       <div className="flex items-center justify-between my-2">
-        <h3 className="font-bold md:mt-0 md:text-lg">Transcript</h3>
-        {hasNetworkMetadata && (
+        <h3 className="font-bold md:mt-0 md:text-lg">
+          Transcript {useNetworkDiarization && networkTranscripts.length > 0 && "(Network)"}
+        </h3>
+        {hasNetworkDiarization && (
           <Button
-            variant={useNetworkMetadata ? "default" : "outline"}
+            variant={useNetworkDiarization ? "default" : "outline"}
             size="sm"
-            onClick={() => setUseNetworkMetadata(!useNetworkMetadata)}
-            disabled={isLoadingMetadata}
+            onClick={() => setUseNetworkDiarization(!useNetworkDiarization)}
+            disabled={isLoadingNetwork || isLoadingMetadata}
             className="text-xs"
           >
-            {isLoadingMetadata && <Loader2 className="h-3 w-3 mr-1 animate-spin" />}
-            Network Metadata
+            {(isLoadingNetwork || isLoadingMetadata) && <Loader2 className="h-3 w-3 mr-1 animate-spin" />}
+            Network Diarization
           </Button>
         )}
       </div>
@@ -162,7 +163,7 @@ export default function TranscriptViewer({
       )}
 
       {!isLoading &&
-        transcripts.map((transcript) => {
+        displayTranscripts.map((transcript) => {
           const speakerInfo = getSpeakerInfo(transcript.speaker)
 
           return (
