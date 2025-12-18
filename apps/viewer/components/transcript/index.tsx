@@ -44,9 +44,11 @@ export default function TranscriptViewer({
     enabled: showNetworkComparison,
   })
 
+  // Always fetch network metadata if available (even without comparison mode)
+  // to enrich payload speakers with avatars and handle "unknown" speakers
   const { metadata: networkMetadata, isLoading: isLoadingMetadata } = useNetworkSpeakerMetadata({
     metadataUrl: meetingData?.speaker_metadata_file_network,
-    enabled: showNetworkComparison,
+    enabled: !!meetingData?.speaker_metadata_file_network,
   })
 
   // Use reattributed transcripts when comparison is ON, otherwise use original
@@ -98,9 +100,11 @@ export default function TranscriptViewer({
   const getSpeakerInfo = (speakerName: string, networkSpeaker?: string) => {
     // Get info for the display speaker (network or payload)
     const displaySpeaker = showNetworkComparison && networkSpeaker ? networkSpeaker : speakerName
+    const isUnknownSpeaker = !speakerName || speakerName.toLowerCase().includes("unknown")
 
-    if (showNetworkComparison && networkMetadata.size > 0) {
-      // Check if any metadata matches the speaker name
+    // Try to use network metadata if available
+    if (networkMetadata.size > 0) {
+      // First, try exact match with display speaker
       for (const meta of networkMetadata.values()) {
         if (meta.name === displaySpeaker || meta.fullName === displaySpeaker) {
           return {
@@ -109,6 +113,61 @@ export default function TranscriptViewer({
             profilePicture: meta.profilePicture,
             originalSpeaker: speakerName,
             networkSpeaker: networkSpeaker,
+          }
+        }
+      }
+
+      // If speaker is "unknown" and we have metadata, try to infer
+      if (isUnknownSpeaker) {
+        // If there's only one person in metadata, use that
+        if (networkMetadata.size === 1) {
+          const [meta] = networkMetadata.values()
+          return {
+            displayName: meta.displayName,
+            fullName: meta.fullName,
+            profilePicture: meta.profilePicture,
+            originalSpeaker: speakerName,
+            networkSpeaker: networkSpeaker,
+          }
+        }
+
+        // If network speaker provided, try to match that
+        if (networkSpeaker) {
+          for (const meta of networkMetadata.values()) {
+            if (meta.name === networkSpeaker || meta.fullName === networkSpeaker) {
+              return {
+                displayName: meta.displayName,
+                fullName: meta.fullName,
+                profilePicture: meta.profilePicture,
+                originalSpeaker: speakerName,
+                networkSpeaker: networkSpeaker,
+              }
+            }
+          }
+        }
+
+        // Find the network metadata speaker NOT present in payload
+        // Logic: Unknown must be the speaker from metadata who isn't already identified
+        const knownPayloadSpeakers = new Set(
+          displayTranscripts
+            .map((t) => t.speaker)
+            .filter((s) => s && !s.toLowerCase().includes("unknown"))
+        )
+
+        for (const meta of networkMetadata.values()) {
+          const notInPayload =
+            !knownPayloadSpeakers.has(meta.name) &&
+            !knownPayloadSpeakers.has(meta.fullName)
+
+          if (notInPayload) {
+            // This must be the unknown speaker
+            return {
+              displayName: meta.displayName,
+              fullName: meta.fullName,
+              profilePicture: meta.profilePicture,
+              originalSpeaker: speakerName,
+              networkSpeaker: networkSpeaker,
+            }
           }
         }
       }
