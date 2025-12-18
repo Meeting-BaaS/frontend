@@ -51,6 +51,10 @@ export function useReattributedTranscripts({
     }
 
     const fetchAndReattribute = async () => {
+      console.log("[Network Re-attribution] Starting fetch and reattribute")
+      console.log("[Network Re-attribution] URL:", networkDiarizationUrl)
+      console.log("[Network Re-attribution] Payload transcripts count:", payloadTranscripts.length)
+
       setIsLoading(true)
       setError(null)
 
@@ -63,6 +67,7 @@ export function useReattributedTranscripts({
 
         const text = await response.text()
         const lines = text.trim().split("\n").filter(Boolean)
+        console.log("[Network Re-attribution] Fetched lines:", lines.length)
 
         let meetingStartTimeMs: number | null = null
         const events: NetworkSpeakerEvent[] = []
@@ -74,6 +79,7 @@ export function useReattributedTranscripts({
             // Check if this is the start time event
             if (parsed.type === "start_time" && parsed.meetingStartTime) {
               meetingStartTimeMs = parsed.meetingStartTime
+              console.log("[Network Re-attribution] Meeting start time:", new Date(meetingStartTimeMs).toISOString())
             } else if (parsed.name && parsed.timestamp !== undefined && parsed.isSpeaking !== undefined) {
               // This is a speaker event
               events.push(parsed as NetworkSpeakerEvent)
@@ -83,12 +89,16 @@ export function useReattributedTranscripts({
           }
         }
 
+        console.log("[Network Re-attribution] Speaker events:", events.length)
+
         if (!meetingStartTimeMs) {
           throw new Error("No meetingStartTime found in network file")
         }
 
         // Parse events into segments
         const segments = parseNetworkSegments(events)
+        console.log("[Network Re-attribution] Parsed segments:", segments.length)
+        console.log("[Network Re-attribution] First 3 segments:", segments.slice(0, 3))
         setNetworkSegments(segments)
 
         // Flatten all payload words
