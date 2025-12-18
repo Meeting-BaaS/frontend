@@ -113,6 +113,9 @@ export function useReattributedTranscripts({
         console.log("[Network Re-attribution] Total payload words:", allWords.length)
         console.log("[Network Re-attribution] First word time:", allWords[0]?.start_time, "seconds")
 
+        // Track which words have been matched to network segments
+        const matchedWordIds = new Set<number>()
+
         // Group words by network segments
         const reattributedTranscripts: ReattributedTranscript[] = []
 
@@ -139,6 +142,7 @@ export function useReattributedTranscripts({
                 speakerMismatch:
                   originalTranscript?.speaker !== segment.speaker,
               })
+              matchedWordIds.add(word.id)
             }
           }
 
@@ -169,6 +173,32 @@ export function useReattributedTranscripts({
             speakerMismatch: hasMismatch,
           })
         }
+
+        // Add unmatched words using original payload structure
+        console.log("[Network Re-attribution] Matched words:", matchedWordIds.size, "of", allWords.length)
+        const unmatchedWords = allWords.filter(w => !matchedWordIds.has(w.id))
+        if (unmatchedWords.length > 0) {
+          console.log("[Network Re-attribution] Adding unmatched words:", unmatchedWords.length)
+
+          // Group unmatched words by original transcript
+          for (const transcript of payloadTranscripts) {
+            const transcriptUnmatchedWords = transcript.words
+              .filter(w => !matchedWordIds.has(w.id))
+              .map(w => ({ ...w, networkSpeaker: undefined, networkSpeakerId: undefined, speakerMismatch: false }))
+
+            if (transcriptUnmatchedWords.length > 0) {
+              reattributedTranscripts.push({
+                ...transcript,
+                words: transcriptUnmatchedWords,
+                networkSpeaker: undefined,
+                speakerMismatch: false,
+              })
+            }
+          }
+        }
+
+        // Sort all transcripts by start time to maintain chronological order
+        reattributedTranscripts.sort((a, b) => a.start_time - b.start_time)
 
         console.log("[Network Re-attribution] Final reattributed transcripts (before merging):", reattributedTranscripts.length)
 
