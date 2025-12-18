@@ -29,6 +29,8 @@ export type Bot = {
   reserved: boolean
   errors: null
   ended_at: string
+  bot_joined_at?: string
+  bot_exited_at?: string
   mp4_s3_path: string
   uuid: string
   bot_param_id: number

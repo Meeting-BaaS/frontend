@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react"
 import { scroller } from "react-scroll"
 import HighlightedWord from "@/components/transcript/highlighted-word"
 import { useNetworkSpeakerMetadata } from "@/hooks/use-network-speaker-metadata"
-import { useNetworkTranscripts } from "@/hooks/use-network-transcripts"
+import { useReattributedTranscripts } from "@/hooks/use-reattributed-transcripts"
 import type { MeetingDataResponse, Transcript, Word } from "@/types/meeting-data"
 
 dayjs.extend(duration)
@@ -33,21 +33,25 @@ export default function TranscriptViewer({
   const [activeWordId, setActiveWordId] = useState<number | null>(null)
   const [activeTranscriptId, setActiveTranscriptId] = useState<number | null>(null)
   const [isAutoScrolling, setIsAutoScrolling] = useState(true)
-  const [useNetworkDiarization, setUseNetworkDiarization] = useState(false)
+  const [showNetworkComparison, setShowNetworkComparison] = useState(false)
 
-  const { transcripts: networkTranscripts, isLoading: isLoadingNetwork } = useNetworkTranscripts({
-    diarizationUrl: meetingData?.speaker_diarization_file_network,
-    enabled: useNetworkDiarization,
+  const {
+    transcripts: reattributedTranscripts,
+    isLoading: isLoadingReattribution
+  } = useReattributedTranscripts({
+    payloadTranscripts: transcripts,
+    networkDiarizationUrl: meetingData?.speaker_diarization_file_network,
+    enabled: showNetworkComparison,
   })
 
   const { metadata: networkMetadata, isLoading: isLoadingMetadata } = useNetworkSpeakerMetadata({
     metadataUrl: meetingData?.speaker_metadata_file_network,
-    enabled: useNetworkDiarization,
+    enabled: showNetworkComparison,
   })
 
-  // Use network transcripts when toggle is ON and data is loaded, otherwise use payload transcripts
-  const displayTranscripts = useNetworkDiarization && networkTranscripts.length > 0
-    ? networkTranscripts
+  // Use reattributed transcripts when comparison is ON, otherwise use original
+  const displayTranscripts = showNetworkComparison
+    ? reattributedTranscripts
     : transcripts
 
   // Find the active word and transcript based on current time
@@ -91,25 +95,32 @@ export default function TranscriptViewer({
     setIsAutoScrolling(false)
   }
 
-  const getSpeakerInfo = (speakerName: string) => {
-    if (useNetworkDiarization && networkMetadata.size > 0) {
+  const getSpeakerInfo = (speakerName: string, networkSpeaker?: string) => {
+    // Get info for the display speaker (network or payload)
+    const displaySpeaker = showNetworkComparison && networkSpeaker ? networkSpeaker : speakerName
+
+    if (showNetworkComparison && networkMetadata.size > 0) {
       // Check if any metadata matches the speaker name
       for (const meta of networkMetadata.values()) {
-        if (meta.name === speakerName || meta.fullName === speakerName) {
+        if (meta.name === displaySpeaker || meta.fullName === displaySpeaker) {
           return {
             displayName: meta.displayName,
             fullName: meta.fullName,
             profilePicture: meta.profilePicture,
+            originalSpeaker: speakerName,
+            networkSpeaker: networkSpeaker,
           }
         }
       }
     }
 
-    // Fallback to original speaker name if no metadata match or toggle is off
+    // Fallback to speaker name if no metadata match
     return {
-      displayName: speakerName,
-      fullName: speakerName,
+      displayName: displaySpeaker,
+      fullName: displaySpeaker,
       profilePicture: undefined,
+      originalSpeaker: speakerName,
+      networkSpeaker: networkSpeaker,
     }
   }
 
@@ -123,18 +134,18 @@ export default function TranscriptViewer({
     >
       <div className="flex items-center justify-between my-2">
         <h3 className="font-bold md:mt-0 md:text-lg">
-          Transcript {useNetworkDiarization && networkTranscripts.length > 0 && "(Network)"}
+          Transcript {showNetworkComparison && "(Network Comparison)"}
         </h3>
         {hasNetworkDiarization && (
           <Button
-            variant={useNetworkDiarization ? "default" : "outline"}
+            variant={showNetworkComparison ? "default" : "outline"}
             size="sm"
-            onClick={() => setUseNetworkDiarization(!useNetworkDiarization)}
-            disabled={isLoadingNetwork || isLoadingMetadata}
+            onClick={() => setShowNetworkComparison(!showNetworkComparison)}
+            disabled={isLoadingReattribution || isLoadingMetadata}
             className="text-xs"
           >
-            {(isLoadingNetwork || isLoadingMetadata) && <Loader2 className="h-3 w-3 mr-1 animate-spin" />}
-            Network Diarization
+            {(isLoadingReattribution || isLoadingMetadata) && <Loader2 className="h-3 w-3 mr-1 animate-spin" />}
+            Compare Network
           </Button>
         )}
       </div>
@@ -164,14 +175,20 @@ export default function TranscriptViewer({
 
       {!isLoading &&
         displayTranscripts.map((transcript) => {
-          const speakerInfo = getSpeakerInfo(transcript.speaker)
+          const reattributed = transcript as any // Type assertion for network properties
+          const speakerInfo = getSpeakerInfo(
+            transcript.speaker,
+            reattributed.networkSpeaker
+          )
+
+          const hasMismatch = showNetworkComparison && reattributed.speakerMismatch
 
           return (
             <div
               key={transcript.id}
               id={`transcript-${transcript.id}`}
               data-transcript-id={transcript.id}
-              className="my-4"
+              className={`my-4 ${hasMismatch ? "border-l-2 border-yellow-500 pl-2" : ""}`}
             >
               <div className="mb-0.5 flex items-center gap-3 text-muted-foreground">
                 {speakerInfo.profilePicture && (
@@ -182,9 +199,16 @@ export default function TranscriptViewer({
                     </AvatarFallback>
                   </Avatar>
                 )}
-                <span className="font-semibold text-sm" title={speakerInfo.fullName}>
-                  {speakerInfo.displayName}
-                </span>
+                <div className="flex flex-col">
+                  <span className="font-semibold text-sm" title={speakerInfo.fullName}>
+                    {speakerInfo.displayName}
+                  </span>
+                  {showNetworkComparison && hasMismatch && speakerInfo.originalSpeaker !== speakerInfo.networkSpeaker && (
+                    <span className="text-xs text-yellow-600 dark:text-yellow-500">
+                      Payload: {speakerInfo.originalSpeaker}
+                    </span>
+                  )}
+                </div>
                 <span className="font-light text-xs">
                   {dayjs.duration(transcript.start_time * 1000).format("mm:ss")}
                 </span>
