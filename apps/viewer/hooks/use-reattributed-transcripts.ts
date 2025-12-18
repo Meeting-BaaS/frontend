@@ -361,6 +361,8 @@ export function useReattributedTranscripts({
               // Add words up to split point to current segment
               const wordsToAdd = transcript.words.slice(0, splitIndex)
               lastMerged.words.push(...wordsToAdd)
+              // Re-sort to maintain chronological order after merging
+              lastMerged.words.sort((a, b) => a.start_time - b.start_time)
 
               // Create new segment with remaining words
               if (splitIndex < transcript.words.length) {
@@ -373,6 +375,8 @@ export function useReattributedTranscripts({
             } else {
               // Merge entirely
               lastMerged.words.push(...transcript.words)
+              // Re-sort to maintain chronological order after merging
+              lastMerged.words.sort((a, b) => a.start_time - b.start_time)
               console.log(`[Network Re-attribution] Merged segment into previous, now ${lastMerged.words.length} words`)
             }
           } else {
