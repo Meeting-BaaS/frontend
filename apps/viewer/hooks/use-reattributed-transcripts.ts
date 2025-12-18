@@ -172,8 +172,8 @@ export function useReattributedTranscripts({
 
         console.log("[Network Re-attribution] Final reattributed transcripts (before merging):", reattributedTranscripts.length)
 
-        // Merge consecutive segments from the same speaker (max ~1000 words per segment)
-        const MAX_WORDS_PER_SEGMENT = 1000
+        // Merge consecutive segments from the same speaker (max ~300 words per segment)
+        const MAX_WORDS_PER_SEGMENT = 300
         const mergedTranscripts: ReattributedTranscript[] = []
 
         for (const transcript of reattributedTranscripts) {
@@ -182,12 +182,43 @@ export function useReattributedTranscripts({
           // Check if we can merge with the previous segment
           const canMerge = lastMerged &&
                           lastMerged.speaker === transcript.speaker &&
-                          lastMerged.words.length + transcript.words.length <= MAX_WORDS_PER_SEGMENT
+                          lastMerged.words.length < MAX_WORDS_PER_SEGMENT
 
           if (canMerge) {
-            // Merge with previous segment
-            lastMerged.words.push(...transcript.words)
-            console.log(`[Network Re-attribution] Merged segment into previous, now ${lastMerged.words.length} words`)
+            // Check if adding this would exceed limit
+            const wouldExceed = lastMerged.words.length + transcript.words.length > MAX_WORDS_PER_SEGMENT
+
+            if (wouldExceed) {
+              // Find nearest punctuation to split at
+              const remainingSpace = MAX_WORDS_PER_SEGMENT - lastMerged.words.length
+              let splitIndex = remainingSpace
+
+              // Look backwards from split point for punctuation
+              const punctuationMarks = ['.', '!', '?', '。', '！', '？']
+              for (let i = splitIndex; i >= Math.max(0, splitIndex - 50); i--) {
+                if (i < transcript.words.length && punctuationMarks.some(mark => transcript.words[i].text.includes(mark))) {
+                  splitIndex = i + 1 // Include the punctuation word
+                  break
+                }
+              }
+
+              // Add words up to split point to current segment
+              const wordsToAdd = transcript.words.slice(0, splitIndex)
+              lastMerged.words.push(...wordsToAdd)
+
+              // Create new segment with remaining words
+              if (splitIndex < transcript.words.length) {
+                mergedTranscripts.push({
+                  ...transcript,
+                  words: transcript.words.slice(splitIndex)
+                })
+              }
+              console.log(`[Network Re-attribution] Split at punctuation: ${lastMerged.words.length} words, new segment: ${transcript.words.length - splitIndex} words`)
+            } else {
+              // Merge entirely
+              lastMerged.words.push(...transcript.words)
+              console.log(`[Network Re-attribution] Merged segment into previous, now ${lastMerged.words.length} words`)
+            }
           } else {
             // Add as new segment
             mergedTranscripts.push(transcript)
