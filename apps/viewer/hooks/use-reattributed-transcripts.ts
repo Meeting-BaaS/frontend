@@ -151,9 +151,10 @@ export function useReattributedTranscripts({
 
         // Add tolerance buffer to catch words in gaps between segments
         // Network detection can have small gaps during natural pauses
-        const TOLERANCE_MS = 500
+        const TOLERANCE_MS = 750 // Increased to catch words just before mic detected as "on"
+        const MAX_DISTANCE_MS = 2000 // Fallback: assign to nearest segment within 2 seconds
 
-        // First pass: assign each word to the closest matching segment
+        // First pass: assign each word to the closest matching segment within tolerance
         // This prevents double-counting when tolerance buffers overlap
         const wordToSegmentMap = new Map<number, number>() // word.id -> segment index
         const wordDistances: number[] = [] // Track distances for statistics
@@ -187,6 +188,75 @@ export function useReattributedTranscripts({
             matchedWordIds.add(word.id)
             wordDistances.push(minDistance)
           }
+        }
+
+        // Fallback pass: For unmatched words, assign to nearest segment within 2 seconds
+        // This ensures words always go to nearest speaker unless truly isolated
+        const unmatchedWords = allWords.filter(w => !matchedWordIds.has(w.id))
+        let fallbackMatches = 0
+
+        for (const word of unmatchedWords) {
+          const absoluteTimeMs = payloadTimeToAbsolute(word.start_time, meetingStartTimeMs)
+
+          let nearestSegmentIndex = -1
+          let minDistance = Number.POSITIVE_INFINITY
+
+          for (let index = 0; index < segments.length; index++) {
+            const segment = segments[index]
+            const segmentCenter = (segment.startMs + segment.endMs) / 2
+            const distance = Math.abs(absoluteTimeMs - segmentCenter)
+
+            if (distance < minDistance && distance <= MAX_DISTANCE_MS) {
+              minDistance = distance
+              nearestSegmentIndex = index
+            }
+          }
+
+          if (nearestSegmentIndex >= 0) {
+            wordToSegmentMap.set(word.id, nearestSegmentIndex)
+            matchedWordIds.add(word.id)
+            wordDistances.push(minDistance)
+            fallbackMatches++
+          }
+        }
+
+        if (fallbackMatches > 0) {
+          console.log(`[Network Re-attribution] Fallback matched ${fallbackMatches} words to nearest segment (within 2s)`)
+        }
+
+        // Final fallback: Match any remaining unmatched words to absolute nearest segment
+        // This ensures ALL words are attributed, even if far from any segment
+        const stillUnmatched = allWords.filter(w => !matchedWordIds.has(w.id))
+        let finalFallbackMatches = 0
+
+        for (const word of stillUnmatched) {
+          const absoluteTimeMs = payloadTimeToAbsolute(word.start_time, meetingStartTimeMs)
+
+          let nearestSegmentIndex = -1
+          let minDistance = Number.POSITIVE_INFINITY
+
+          // Find absolute nearest segment (no distance limit)
+          for (let index = 0; index < segments.length; index++) {
+            const segment = segments[index]
+            const segmentCenter = (segment.startMs + segment.endMs) / 2
+            const distance = Math.abs(absoluteTimeMs - segmentCenter)
+
+            if (distance < minDistance) {
+              minDistance = distance
+              nearestSegmentIndex = index
+            }
+          }
+
+          if (nearestSegmentIndex >= 0) {
+            wordToSegmentMap.set(word.id, nearestSegmentIndex)
+            matchedWordIds.add(word.id)
+            wordDistances.push(minDistance)
+            finalFallbackMatches++
+          }
+        }
+
+        if (finalFallbackMatches > 0) {
+          console.log(`[Network Re-attribution] Final fallback matched ${finalFallbackMatches} words to absolute nearest segment (no distance limit)`)
         }
 
         // Calculate statistics
