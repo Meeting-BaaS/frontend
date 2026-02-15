@@ -15,7 +15,7 @@ export function ZoomTokenAlert({ overrideClassName }: ZoomTokenAlertProps) {
     <Alert
       variant="warning"
       className={cn(
-        "sticky top-14 z-40 mx-auto box-content w-full max-w-container backdrop-blur-xl lg:top-16 mt-2 lg:w-[calc(100%-6rem)] lg:rounded-2xl lg:border dark:border-red-700 text-red-500 bg-red-500/10 dark:bg-red-700/10 dark:text-red-500 *:data-[slot=alert-description]:text-foreground",
+        "mx-auto box-content w-full max-w-container backdrop-blur-xl mt-2 lg:w-[calc(100%-6rem)] lg:rounded-2xl lg:border dark:border-red-700 text-red-500 bg-red-500/10 dark:bg-red-700/10 dark:text-red-500 *:data-[slot=alert-description]:text-foreground",
         overrideClassName
       )}
     >
