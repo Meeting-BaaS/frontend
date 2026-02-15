@@ -24,7 +24,8 @@ export function ZoomTokenAlert({ overrideClassName }: ZoomTokenAlertProps) {
       <AlertDescription>
         <div>
           <span className="font-bold">Beginning March 2 2026</span>, Zoom bots must be authorized.
-          Authorize your bots by using creating a Zoom marketplace application, OBF or ZAK tokens.{" "}
+          Authorize your bots by creating a Zoom marketplace application and using OBF or ZAK
+          tokens.{" "}
           <Link
             href={ZOOM_OBF_TOKEN_BLOG_URL}
             target="_blank"
